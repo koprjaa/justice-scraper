@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: xml_parser.py
-# Description: Extracts revenue, assets, and profit from justice.cz financial XML.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    xml_parser.py
+#
+# Description:
+# Extracts revenue, assets, and profit from justice.cz financial XML.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import xml.etree.ElementTree as ET
 from typing import Callable

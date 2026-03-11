@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: models.py
-# Description: Data classes for document candidates, financial records, and API result shape.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    models.py
+#
+# Description:
+# Data classes for document candidates, financial records, and API result shape.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -57,8 +65,7 @@ class JusticeFinancialsResult:
             "ico": self.ico,
             "subjektId": self.subjekt_id,
             "financials": [item.to_dict() for item in self.financials],
-            # ISO-8601 for JSON serialisation
-            "lastUpdated": self.last_updated.isoformat(),
+            "lastUpdated": self.last_updated.isoformat(),  # ISO-8601 for JSON
         }
 
 

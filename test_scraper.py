@@ -1,22 +1,28 @@
 #!/usr/bin/env python3
+#
 # Project: justice-scraper
-# File: test_scraper.py
-# Description: Smoke test for the scraper over a small ID range.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    test_scraper.py
+#
+# Description:
+# Smoke test for the scraper over a small subject ID range.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import asyncio
 import sys
 from pathlib import Path
 
-# Allow importing justice_scraper when run from project root
 sys.path.insert(0, str(Path(__file__).parent))
 
 from justice_scraper import scrape_range, OUTPUT_CSV
 
 
 async def test_scraper():
-    """Runs scrape_range(1, 10) and prints CSV summary."""
     print("=" * 60)
     print("TEST JUSTICE SCRAPER")
     print("=" * 60)

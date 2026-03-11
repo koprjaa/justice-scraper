@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: justice_scraper.py
-# Description: Scrapes Czech Justice Registry for subject IDs and writes záverka document links to CSV.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    justice_scraper.py
+#
+# Description:
+# Scrapes the Czech Justice Registry for subject IDs and writes záverka document links to CSV.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import asyncio
 import csv
@@ -38,7 +46,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("scraper.log", "w", "utf-8"), logging.StreamHandler()],
 )
 
-# Target document type: "záverka" (closing report); regex allows spelling with/without diacritics.
+# Registry row type "záverka" (closing report); regex allows spelling with/without diacritics.
 ZAVERKA_RE = re.compile(r"z[áa]v[ěe]rka", re.IGNORECASE)
 
 
@@ -118,7 +126,7 @@ def parse_document_link(detail_html: str) -> tuple[str, str] | None:
     xml_url = None
     pdf_url = None
     row = section_row.find_next_sibling("tr")
-    for _ in range(10):  # cap sibling rows to avoid runaway on malformed HTML
+    for _ in range(10):  # bound iteration on malformed HTML
         if row is None:
             break
 
@@ -173,7 +181,7 @@ async def scrape_range(start_id: int, end_id: int) -> int:
     total = end_id - start_id + 1
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     timeout = aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)
-    # ssl=False: some environments (corporate proxy, old cert chain) break TLS verification
+    # TLS verification disabled for environments where it fails (e.g. corporate proxy, old cert chain)
     connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS, ttl_dns_cache=600, ssl=False)
 
     async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:

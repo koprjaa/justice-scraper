@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: http_client.py
-# Description: HTTP client with rate limiting and attachment-specific timeout/retry for justice.cz.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    http_client.py
+#
+# Description:
+# HTTP client with rate limiting and attachment-specific timeout/retry for justice.cz.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import asyncio
 import random
@@ -20,7 +28,7 @@ from .config import (
 from .logging_utils import log_status
 from .rate_limiter import AsyncRateLimiter
 
-# Attachments are on CDN; no rate limit, separate timeout.
+# Attachments on CDN: no rate limit, separate timeout
 _ATTACHMENT_PREFIXES = ("step3_xml_", "step3_xhtml_", "step3_pdf_")
 
 
@@ -66,12 +74,11 @@ class JusticeHttpClient:
         timeout = (
             aiohttp.ClientTimeout(total=ATTACHMENT_TIMEOUT_SECONDS)
             if attachment
-            else None  # inherits session default
+            else None
         )
         headers = {
             "User-Agent": random.choice(USER_AGENTS),
-            # Same-origin Referer required or justice.cz returns HTML instead of file
-            "Referer": referer or f"{JUSTICE_ORIGIN}/ias/ui/",
+            "Referer": referer or f"{JUSTICE_ORIGIN}/ias/ui/",  # required or server returns HTML instead of file
         }
 
         for attempt in range(max_retries + 1):
@@ -89,7 +96,6 @@ class JusticeHttpClient:
                         if mode == "bytes":
                             raw = await response.read()
                             content_type = response.headers.get("Content-Type", "")
-                            # Reject HTML responses when expecting binary
                             if raw[:5] in (b"<!DOC", b"<html", b"<HTML") or "text/html" in content_type:
                                 log_status(
                                     "justice-scraper ico=%s status=html_instead_of_file step=%s",

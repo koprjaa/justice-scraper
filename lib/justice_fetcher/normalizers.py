@@ -1,15 +1,23 @@
+#
 # Project: justice-scraper
-# File: normalizers.py
-# Description: Text normalization and number/year parsing for financial data.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    normalizers.py
+#
+# Description:
+# Text normalization and number/year parsing for financial data.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import re
 import unicodedata
 from datetime import datetime, timezone
 from typing import Any
 
-# Cached so extract_year() does not call datetime.now() every time
+# Cached to avoid repeated datetime.now() in extract_year()
 _YEAR_UPPER_BOUND = datetime.now(tz=timezone.utc).year + 1
 
 

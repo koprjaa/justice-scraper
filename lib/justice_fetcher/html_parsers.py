@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: html_parsers.py
-# Description: Parses justice.cz HTML to extract subjektId, document candidates, and attachment URLs.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    html_parsers.py
+#
+# Description:
+# Parses justice.cz HTML to extract subjektId, document candidates, and attachment URLs.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import re
 from urllib.parse import urljoin
@@ -74,10 +82,8 @@ def extract_attachment_urls(
     return xml_url, xhtml_url, pdf_url
 
 
-# ── internal helpers ──────────────────────────────────────────────────────────
-
 def _collect_attachment_links(detail_html: str) -> list[tuple[str, str]]:
-    # Links from "Digitální podoba" section (digital copy)
+    # Section "Digitální podoba" (digital copy) on the detail page
     soup = BeautifulSoup(detail_html, "lxml")
     links: list[tuple[str, str]] = []
     seen: set[str] = set()
@@ -103,7 +109,6 @@ def _collect_attachment_links(detail_html: str) -> list[tuple[str, str]]:
     if links:
         return links
 
-    # Fallback when section layout is missing
     for anchor in soup.select("a[href]"):
         href = anchor.get("href", "").strip()
         if not href or href in seen:
@@ -120,7 +125,7 @@ def _best_url(
     dokument_id: str | None,
 ) -> str | None:
     best_url: str | None = None
-    best_score = 0  # must beat zero to be selected
+    best_score = 0
 
     for text, href in links:
         href_lower = href.lower()
@@ -141,23 +146,19 @@ def _score_attachment(
 ) -> int:
     score = 0
 
-    # Downrank non-financial / nav links
     if "ilinklistener-htmlcontainer-logo" in href_lower:
         return -100
     if any(token in href_lower or token in text_norm for token in ("gdpr", "ochrana", "informace")):
         return -60
 
-    # Prefer download URLs and links that match this document
     if "content/download" in href_lower or "/download/" in href_lower:
         score += 4
     if dokument_id and dokument_id in href_lower:
         score += 10
 
-    # Boost accounting-related link text
     if any(token in text_norm for token in ("zaverka", "ucetni", "rozvaha", "vysledovka", "vykaz")):
         score += 6
 
-    # Must match requested type
     if attachment_type == "xml":
         if ".xml" in href_lower or " xml" in text_norm or "xbrl" in text_norm:
             score += 20

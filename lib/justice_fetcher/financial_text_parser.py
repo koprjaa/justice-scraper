@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: financial_text_parser.py
-# Description: Keyword-based extraction of revenue, assets, and profit from plain text.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    financial_text_parser.py
+#
+# Description:
+# Keyword-based extraction of revenue, assets, and profit from plain text.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import re
 
@@ -95,5 +103,4 @@ def _score_number_candidate(value: float) -> int:
 def _overall_confidence(*parts: ConfidenceLevel) -> ConfidenceLevel:
     ordered: dict[ConfidenceLevel, int] = {"none": 0, "low": 1, "medium": 2, "high": 3}
     best_part = max(parts, key=lambda item: ordered[item], default="none")
-    # Keep "none" when nothing found; do not upgrade to "low"
     return best_part

@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: rate_limiter.py
-# Description: Async rate limiter for spacing navigation requests to justice.cz.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    rate_limiter.py
+#
+# Description:
+# Async rate limiter for spacing navigation requests to justice.cz.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import asyncio
 import time

@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: xhtml_parser.py
-# Description: Extracts financials from XHTML attachment content.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    xhtml_parser.py
+#
+# Description:
+# Extracts financials from XHTML attachment content.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 from bs4 import BeautifulSoup
 

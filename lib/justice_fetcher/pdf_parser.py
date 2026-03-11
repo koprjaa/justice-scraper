@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: pdf_parser.py
-# Description: Extracts text from PDF attachments (text layer or OCR) and parses financials.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    pdf_parser.py
+#
+# Description:
+# Extracts text from PDF attachments (text layer or OCR) and parses financials.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 from __future__ import annotations
 

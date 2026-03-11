@@ -1,8 +1,16 @@
+#
 # Project: justice-scraper
-# File: service.py
-# Description: Orchestrates the three-step fetch (subjektId, document list, attachments) and parses financials from XML/XHTML/PDF.
-# Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-# License: Proprietary
+# File:    service.py
+#
+# Description:
+# Orchestrates the three-step fetch (subjektId, document list, attachments) and parses financials from XML/XHTML/PDF.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import asyncio
 import re
@@ -46,7 +54,6 @@ async def fetch_justice_financials(ico: str) -> dict[str, object]:
         limit=0,
         ttl_dns_cache=300,
     )
-    # User-Agent rotated per-request in JusticeHttpClient
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "cs,en;q=0.8",
@@ -64,7 +71,6 @@ async def fetch_justice_financials(ico: str) -> dict[str, object]:
 
 
 async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> dict[str, object]:
-    # Resolve subjektId (primary URL; fallback when primary times out)
     step1_html = await client.fetch_text(
         STEP1_URL_PRIMARY.format(ico=ico), ico, "step1_primary"
     )
@@ -81,7 +87,6 @@ async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> 
         log_status("justice-scraper ico=%s status=subjekt_not_found", ico)
         return empty_result(ico).to_dict()
 
-    # List document candidates for this subject
     list_html = await client.fetch_text(
         STEP2_URL.format(subjekt_id=subjekt_id), ico, "step2_documents"
     )
@@ -94,7 +99,6 @@ async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> 
         log_status("justice-scraper ico=%s subjektId=%s status=no_financial_documents", ico, subjekt_id)
         return empty_result(ico, subjekt_id).to_dict()
 
-    # Fetch all candidates in parallel
     current_year = datetime.now(tz=timezone.utc).year
     records = await asyncio.gather(
         *[_process_candidate(client, ico, candidate, current_year) for candidate in candidates],
@@ -130,10 +134,8 @@ async def _process_candidate(
     if detail_html is None:
         return _fallback_record(fallback_year, detail_url, ["document_detail_unavailable"])
 
-    # Single pass to get all attachment URLs
     xml_url, xhtml_url, pdf_url = extract_attachment_urls(detail_html, candidate.dokument_id)
 
-    # Prefer XML (structured)
     if xml_url:
         xml_text = await client.fetch_text(xml_url, ico, f"step3_xml_{candidate.dokument_id}", referer=detail_url)
         if xml_text is not None:
@@ -151,7 +153,6 @@ async def _process_candidate(
                     source_notes=["parsed_from_xml"],
                 )
 
-    # Then XHTML
     if xhtml_url:
         xhtml_text = await client.fetch_text(xhtml_url, ico, f"step3_xhtml_{candidate.dokument_id}", referer=detail_url)
         if xhtml_text is not None:
@@ -168,7 +169,6 @@ async def _process_candidate(
                 source_notes=_coerce_notes(parsed_xhtml.get("sourceNotes")),
             )
 
-    # PDF last (best-effort)
     if pdf_url:
         pdf_bytes = await client.fetch_bytes(pdf_url, ico, f"step3_pdf_{candidate.dokument_id}", referer=detail_url)
         if pdf_bytes is not None:
@@ -188,8 +188,6 @@ async def _process_candidate(
 
     return _fallback_record(fallback_year, detail_url, ["no_attachment_found"])
 
-
-# ── helpers ───────────────────────────────────────────────────────────────────
 
 def _fallback_record(year: int, document_url: str, source_notes: list[str]) -> FinancialRecord:
     return FinancialRecord(
