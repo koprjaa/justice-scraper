@@ -1,5 +1,9 @@
 # justice-scraper
 
+[![Python](https://img.shields.io/badge/python-3.x-3776ab?style=flat)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-Proprietary-6c757d?style=flat)](#)
+[![aiohttp](https://img.shields.io/badge/aiohttp-async-6c757d?style=flat)](https://github.com/aio-libs/aiohttp)
+
 Scrapes the Czech Justice Registry (or.justice.cz) for company-related documents and, in a separate module, extracts structured financial data. There is no official API; both parts rely on HTML and document downloads.
 
 ## What it does
