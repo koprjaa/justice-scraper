@@ -53,7 +53,7 @@ ZAVERKA_RE = re.compile(r"z[áa]v[ěe]rka", re.IGNORECASE)
 def normalize_url(href: str) -> str:
     if href.startswith("//"):
         return "https:" + href
-    if href.startswith("http://") or href.startswith("https://"):
+    if href.startswith(("http://", "https://")):
         return href
     if href.startswith("./"):
         return DETAIL_BASE + href[2:]
@@ -156,8 +156,7 @@ async def scrape_subject(
     subject_id: int,
 ) -> tuple[str, str, str, str] | None:
     async with semaphore:
-        main_url = BASE_URL.format(subject_id=f"{subject_id:06d}")
-        main_html = await fetch_html(session, main_url)
+        main_html = await fetch_html(session, BASE_URL.format(subject_id=f"{subject_id:06d}"))
         if not main_html:
             return None
 
@@ -178,7 +177,6 @@ async def scrape_subject(
 
 
 async def scrape_range(start_id: int, end_id: int) -> int:
-    total = end_id - start_id + 1
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     timeout = aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)
     # TLS verification disabled for environments where it fails (e.g. corporate proxy, old cert chain)
@@ -195,7 +193,7 @@ async def scrape_range(start_id: int, end_id: int) -> int:
             writer = csv.writer(output)
             writer.writerow(["ico", "vznik_listiny", "link", "typ"])
 
-            progress = tqdm(asyncio.as_completed(tasks), total=total, desc="Scraping", unit="subjekt")
+            progress = tqdm(asyncio.as_completed(tasks), total=end_id - start_id + 1, desc="Scraping", unit="subjekt")
             for task in progress:
                 try:
                     result = await task

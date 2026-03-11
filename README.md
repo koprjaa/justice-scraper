@@ -1,5 +1,7 @@
 # justice-scraper
 
+[![Python](https://img.shields.io/badge/python-3.x-lightgrey?style=flat-square)](https://www.python.org/) [![aiohttp](https://img.shields.io/badge/aiohttp-async-lightgrey?style=flat-square)](https://github.com/aio-libs/aiohttp) [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+
 ## What it does
 
 The repository contains two separate parts that consume the Czech Justice Registry (or.justice.cz). The root script `justice_scraper.py` takes a numeric range of subject IDs, fetches each subject’s page, locates the first "záverka" (closing report) row, follows the detail page, and collects the digital copy link (XML preferred, otherwise PDF). It writes one CSV with columns ico, vznik_listiny, link, typ. It does not resolve company identifier (IČO) to subject ID; it iterates subject IDs only. The library under `lib/justice_fetcher` is keyed by IČO: it resolves IČO to subject ID via the registry search (with a fallback URL), lists up to three "účetní závěrka" document candidates, fetches each detail page and attachment links, then downloads and parses XML, then XHTML, then PDF. From the first successful parse it extracts year, revenue, total assets, and net profit and returns a dict with ico, subjektId, financials (list of records with confidence and source notes), and lastUpdated. The two parts are not connected; they share the same origin and similar parsing patterns.
