@@ -81,12 +81,7 @@ def _find_metric_from_lines(
 
 def _extract_numbers(text: str) -> list[float]:
     tokens = re.findall(r"\(?-?\d[\d\s.,]{0,20}\)?", text)
-    values: list[float] = []
-    for token in tokens:
-        parsed = parse_number(token)
-        if parsed is not None:
-            values.append(parsed)
-    return values
+    return [x for t in tokens if (x := parse_number(t)) is not None]
 
 
 def _score_number_candidate(value: float) -> int:
@@ -102,5 +97,4 @@ def _score_number_candidate(value: float) -> int:
 
 def _overall_confidence(*parts: ConfidenceLevel) -> ConfidenceLevel:
     ordered: dict[ConfidenceLevel, int] = {"none": 0, "low": 1, "medium": 2, "high": 3}
-    best_part = max(parts, key=lambda item: ordered[item], default="none")
-    return best_part
+    return max(parts, key=lambda item: ordered[item], default="none")

@@ -179,9 +179,7 @@ def _score_attachment(
 
 
 def _document_sort_key(item: DocumentCandidate) -> tuple[int, int]:
-    year = item.year or 0
     try:
-        doc_num = int(item.dokument_id)
+        return (item.year or 0, int(item.dokument_id))
     except ValueError:
-        doc_num = 0
-    return year, doc_num
+        return (item.year or 0, 0)

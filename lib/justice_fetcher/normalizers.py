@@ -29,11 +29,7 @@ def normalize_text(value: str) -> str:
 
 def extract_year(value: str) -> int | None:
     years = [int(y) for y in re.findall(r"\b(?:19|20)\d{2}\b", value)]
-    if not years:
-        return None
-
-    filtered = [year for year in years if 1990 <= year <= _YEAR_UPPER_BOUND]
-    return max(filtered) if filtered else None
+    return max((y for y in years if 1990 <= y <= _YEAR_UPPER_BOUND), default=None)
 
 
 def parse_number(raw: Any) -> float | None:

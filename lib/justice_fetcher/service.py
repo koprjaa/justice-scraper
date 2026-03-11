@@ -106,19 +106,18 @@ async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> 
     )
 
     financials = sorted(records, key=lambda r: r.year, reverse=True)
-    result = JusticeFinancialsResult(
-        ico=ico,
-        subjekt_id=subjekt_id,
-        financials=financials,
-        last_updated=datetime.now(tz=timezone.utc),
-    )
     log_status(
         "justice-scraper ico=%s subjektId=%s status=done records=%s",
         ico,
         subjekt_id,
         len(financials),
     )
-    return result.to_dict()
+    return JusticeFinancialsResult(
+        ico=ico,
+        subjekt_id=subjekt_id,
+        financials=financials,
+        last_updated=datetime.now(tz=timezone.utc),
+    ).to_dict()
 
 
 async def _process_candidate(
