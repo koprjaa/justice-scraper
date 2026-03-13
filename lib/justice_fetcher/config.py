@@ -14,22 +14,25 @@
 
 JUSTICE_ORIGIN = "https://or.justice.cz"
 
-STEP1_URL_PRIMARY = "https://or.justice.cz/ias/ui/rejstrik-firma?ico={ico}"
-STEP1_URL_FALLBACK = "https://or.justice.cz/ias/ui/rejstrik-$firma?ico={ico}"
+STEP1_URL_PRIMARY = (
+    "https://or.justice.cz/ias/ui/rejstrik-$firma"
+    "?ico={ico}&jenPlatne=PLATNE&polozek=50&typHledani=STARTS_WITH"
+)
+STEP1_URL_FALLBACK = "https://or.justice.cz/ias/ui/rejstrik-firma?ico={ico}"
 STEP2_URL = "https://or.justice.cz/ias/ui/vypis-sl-firma?subjektId={subjekt_id}"
 STEP3_URL = "https://or.justice.cz/ias/ui/vypis-sl-detail?dokument={dokument_id}"
 
-# Step1/2/3 HTML navigation
-REQUEST_TIMEOUT_SECONDS = 15
-MAX_RETRIES = 2
-RETRY_BACKOFF_SECONDS = 0.5
+# Step1/2/3 HTML navigation (optimized for speed)
+REQUEST_TIMEOUT_SECONDS = 8
+MAX_RETRIES = 1
+RETRY_BACKOFF_SECONDS = 0.2
 
-# Attachments on CDN: longer timeout, no retries
-ATTACHMENT_TIMEOUT_SECONDS = 60
+# Attachments on CDN: short timeout, no retries
+ATTACHMENT_TIMEOUT_SECONDS = 12
 ATTACHMENT_MAX_RETRIES = 0
 
 # Navigation only; attachments bypass
-RATE_LIMIT_SECONDS = 0.5
+RATE_LIMIT_SECONDS = 0.05
 
 MAX_DOCUMENT_CANDIDATES = 3
 

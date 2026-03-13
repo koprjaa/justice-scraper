@@ -3,7 +3,7 @@
 # File:    service.py
 #
 # Description:
-# Orchestrates the three-step fetch (subjektId, document list, attachments) and parses financials from XML/XHTML/PDF.
+# Orchestrates the three-step fetch (subjektId, document list, attachments) and parses financials from XML/XHTML.
 #
 # Author:
 # Jan Alexandr Kopřiva
@@ -35,7 +35,6 @@ from .html_parsers import (
 from .http_client import JusticeHttpClient
 from .logging_utils import log_status
 from .models import ConfidenceLevel, DocumentCandidate, FinancialRecord, JusticeFinancialsResult, empty_result
-from .pdf_parser import parse_financial_pdf
 from .rate_limiter import AsyncRateLimiter
 from .xhtml_parser import parse_financial_xhtml
 from .xml_parser import parse_financial_xml
@@ -71,18 +70,25 @@ async def fetch_justice_financials(ico: str) -> dict[str, object]:
 
 
 async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> dict[str, object]:
-    step1_html = await client.fetch_text(
-        STEP1_URL_PRIMARY.format(ico=ico), ico, "step1_primary"
-    )
-    if step1_html is None:
-        step1_html = await client.fetch_text(
-            STEP1_URL_FALLBACK.format(ico=ico), ico, "step1_fallback"
-        )
+    step1_variants = [
+        ("step1_primary", STEP1_URL_PRIMARY.format(ico=ico)),
+        ("step1_fallback", STEP1_URL_FALLBACK.format(ico=ico)),
+    ]
+    step1_html: str | None = None
+    subjekt_id: str | None = None
+    for step_name, step1_url in step1_variants:
+        step1_html = await client.fetch_text(step1_url, ico, step_name)
+        if step1_html is None:
+            continue
+
+        subjekt_id = extract_subjekt_id(step1_html)
+        if subjekt_id:
+            break
+
     if step1_html is None:
         log_status("justice-scraper ico=%s status=step1_failed", ico)
         return empty_result(ico).to_dict()
 
-    subjekt_id = extract_subjekt_id(step1_html)
     if not subjekt_id:
         log_status("justice-scraper ico=%s status=subjekt_not_found", ico)
         return empty_result(ico).to_dict()
@@ -169,23 +175,19 @@ async def _process_candidate(
             )
 
     if pdf_url:
-        pdf_bytes = await client.fetch_bytes(pdf_url, ico, f"step3_pdf_{candidate.dokument_id}", referer=detail_url)
-        if pdf_bytes is not None:
-            parsed_pdf = parse_financial_pdf(pdf_bytes, candidate.year)
-            return FinancialRecord(
-                year=int(parsed_pdf["year"] or fallback_year),
-                revenue=_as_float(parsed_pdf["revenue"]),
-                total_assets=_as_float(parsed_pdf["totalAssets"]),
-                net_profit=_as_float(parsed_pdf["netProfit"]),
-                source_type="pdf",
-                document_url=pdf_url,
-                parser_used="pdf",
-                confidence=_coerce_confidence(parsed_pdf.get("confidence")),
-                source_notes=_coerce_notes(parsed_pdf.get("sourceNotes")),
-            )
-        return _fallback_record(fallback_year, pdf_url, ["pdf_download_failed"])
+        return FinancialRecord(
+            year=fallback_year,
+            revenue=None,
+            total_assets=None,
+            net_profit=None,
+            source_type="pdf",
+            document_url=pdf_url,
+            parser_used="url_only",
+            confidence="none",
+            source_notes=["pdf_url_collected_not_parsed"],
+        )
 
-    return _fallback_record(fallback_year, detail_url, ["no_attachment_found"])
+    return _fallback_record(fallback_year, detail_url, ["no_xml_xhtml_or_pdf_attachment_found"])
 
 
 def _fallback_record(year: int, document_url: str, source_notes: list[str]) -> FinancialRecord:
@@ -194,7 +196,7 @@ def _fallback_record(year: int, document_url: str, source_notes: list[str]) -> F
         revenue=None,
         total_assets=None,
         net_profit=None,
-        source_type="pdf",
+        source_type="xhtml",
         document_url=document_url,
         parser_used="fallback",
         confidence="none",
