@@ -34,7 +34,7 @@ ATTACHMENT_MAX_RETRIES = 0
 # Navigation only; attachments bypass
 RATE_LIMIT_SECONDS = 0.05
 
-MAX_DOCUMENT_CANDIDATES = 3
+MAX_DOCUMENT_CANDIDATES = 1
 
 # Below this, fall back to OCR for PDF
 OCR_MIN_TEXT_CHARS = 120

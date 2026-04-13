@@ -137,7 +137,7 @@ async def _process_candidate(
 
     detail_html = await client.fetch_text(detail_url, ico, f"step3_detail_{candidate.dokument_id}")
     if detail_html is None:
-        return _fallback_record(fallback_year, detail_url, ["document_detail_unavailable"])
+        return _fallback_record(fallback_year, detail_url, candidate.dokument_id, ["document_detail_unavailable"])
 
     xml_url, xhtml_url, pdf_url = extract_attachment_urls(detail_html, candidate.dokument_id)
 
@@ -153,6 +153,7 @@ async def _process_candidate(
                     net_profit=_as_float(parsed["netProfit"]),
                     source_type="xml",
                     document_url=xml_url,
+                    dokument_id=candidate.dokument_id,
                     parser_used="xml",
                     confidence="high",
                     source_notes=["parsed_from_xml"],
@@ -169,6 +170,7 @@ async def _process_candidate(
                 net_profit=_as_float(parsed_xhtml["netProfit"]),
                 source_type="xhtml",
                 document_url=xhtml_url,
+                dokument_id=candidate.dokument_id,
                 parser_used="xhtml",
                 confidence=_coerce_confidence(parsed_xhtml.get("confidence")),
                 source_notes=_coerce_notes(parsed_xhtml.get("sourceNotes")),
@@ -182,15 +184,16 @@ async def _process_candidate(
             net_profit=None,
             source_type="pdf",
             document_url=pdf_url,
+            dokument_id=candidate.dokument_id,
             parser_used="url_only",
             confidence="none",
             source_notes=["pdf_url_collected_not_parsed"],
         )
 
-    return _fallback_record(fallback_year, detail_url, ["no_xml_xhtml_or_pdf_attachment_found"])
+    return _fallback_record(fallback_year, detail_url, candidate.dokument_id, ["no_xml_xhtml_or_pdf_attachment_found"])
 
 
-def _fallback_record(year: int, document_url: str, source_notes: list[str]) -> FinancialRecord:
+def _fallback_record(year: int, document_url: str, dokument_id: str | None, source_notes: list[str]) -> FinancialRecord:
     return FinancialRecord(
         year=year,
         revenue=None,
@@ -198,6 +201,7 @@ def _fallback_record(year: int, document_url: str, source_notes: list[str]) -> F
         net_profit=None,
         source_type="xhtml",
         document_url=document_url,
+        dokument_id=dokument_id,
         parser_used="fallback",
         confidence="none",
         source_notes=source_notes,

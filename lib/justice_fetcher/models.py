@@ -35,6 +35,7 @@ class FinancialRecord:
     net_profit: float | None
     source_type: SourceType
     document_url: str
+    dokument_id: str | None = None
     parser_used: str = "none"
     confidence: ConfidenceLevel = "none"
     source_notes: list[str] | None = None
@@ -47,6 +48,7 @@ class FinancialRecord:
             "netProfit": self.net_profit,
             "sourceType": self.source_type,
             "documentUrl": self.document_url,
+            "dokumentId": self.dokument_id,
             "parserUsed": self.parser_used,
             "confidence": self.confidence,
             "sourceNotes": self.source_notes or [],
