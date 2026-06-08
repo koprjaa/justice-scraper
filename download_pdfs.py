@@ -32,6 +32,11 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
         while True:
             ico, subjekt_id, dokument_id, year = await queue.get()
             try:
+                # Validate dokument_id: must be digits only to prevent path traversal
+                if not str(dokument_id).isdigit():
+                    logging.error(f"{ico}: Invalid dokument_id '{dokument_id}', skipping")
+                    continue
+
                 # Target filename
                 out_path = DOWNLOAD_DIR / f"{ico}_{year}_{dokument_id}.txt"
                 if out_path.exists():

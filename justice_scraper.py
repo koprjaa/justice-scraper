@@ -179,8 +179,7 @@ async def scrape_subject(
 async def scrape_range(start_id: int, end_id: int) -> int:
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUESTS)
     timeout = aiohttp.ClientTimeout(total=REQUEST_TIMEOUT)
-    # TLS verification disabled for environments where it fails (e.g. corporate proxy, old cert chain)
-    connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS, ttl_dns_cache=600, ssl=False)
+    connector = aiohttp.TCPConnector(limit=MAX_CONCURRENT_REQUESTS, ttl_dns_cache=600)
 
     async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
         tasks = [
