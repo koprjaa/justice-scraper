@@ -4,7 +4,6 @@ import logging
 from pathlib import Path
 from tqdm import tqdm
 from lib.justice_fetcher import fetch_justice_financials
-import sys
 
 INPUT_CSV = Path("PO_ALL.csv")
 OUTPUT_CSV = Path("financials_links.csv")
