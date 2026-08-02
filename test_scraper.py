@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from justice_scraper import scrape_range, OUTPUT_CSV
+from justice_scraper import OUTPUT_CSV, scrape_range
 
 
 async def test_scraper():

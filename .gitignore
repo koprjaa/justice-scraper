@@ -1,5 +1,15 @@
-venv/
 __pycache__/
 *.pyc
-scraper.log
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+uv.lock
+
+# Run artifacts
+*.log
+texts/
 document_links.csv
+financials_links.csv
+PO_ALL.csv
+test_links.csv

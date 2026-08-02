@@ -196,8 +196,8 @@ async def scrape_range(start_id: int, end_id: int) -> int:
             for task in progress:
                 try:
                     result = await task
-                except Exception as exc:
-                    logging.error("Task failed: %s", exc)
+                except Exception:
+                    logging.exception("Task failed")
                     continue
 
                 if result:

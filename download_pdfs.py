@@ -1,14 +1,15 @@
 import asyncio
 import csv
+import html
+import io
 import logging
 import re
 from pathlib import Path
-import html
-import aiohttp
 from urllib.parse import urljoin
-from tqdm import tqdm
-import io
+
+import aiohttp
 import pdfplumber
+from tqdm import tqdm
 
 INPUT_CSV = Path("financials_links.csv")
 DOWNLOAD_DIR = Path("texts")
@@ -25,9 +26,9 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     }
-    
+
     timeout = aiohttp.ClientTimeout(total=30)
-    
+
     async with aiohttp.ClientSession(timeout=timeout, headers=headers) as session:
         while True:
             ico, subjekt_id, dokument_id, year = await queue.get()
@@ -55,7 +56,7 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
                 if not links:
                     logging.error(f"{ico}: Dokument {dokument_id} not found on listing page.")
                     continue
-                
+
                 detail_url = urljoin(list_url, html.unescape(links[0]))
 
                 # 2. Load the detail page using the valid session link
@@ -71,12 +72,12 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
 
                 # Find the actual download link (the one that expires)
                 dl_links = re.findall(r'href="([^"]+)"', detail_html)
-                dl_matches = [l for l in dl_links if 'download' in l and 'GDPR' not in l]
-                
+                dl_matches = [link for link in dl_links if 'download' in link and 'GDPR' not in link]
+
                 if not dl_matches:
                     logging.error(f"{ico}: No download link found on detail page.")
                     continue
-                    
+
                 download_url = urljoin(detail_url, dl_matches[0])
 
                 # 3. Download the actual file
@@ -86,7 +87,7 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
                         if "text/html" in content_type:
                             logging.error(f"{ico}: Download returned HTML instead of a file.")
                             continue
-                            
+
                         file_data = await resp.read()
                         text_chunks = []
                         try:
@@ -98,20 +99,20 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
                             extracted_text = "\n\n".join(text_chunks)
                             with out_path.open("w", encoding="utf-8") as f:
                                 f.write(extracted_text)
-                        except Exception as e:
-                            logging.error(f"{ico}: Failed to extract text from PDF: {e}")
+                        except Exception:
+                            logging.exception(f"{ico}: Failed to extract text from PDF")
                     else:
                         logging.error(f"{ico}: Failed to download file (HTTP {resp.status})")
 
-            except Exception as e:
-                logging.error(f"{ico}: Exception during download: {e}")
+            except Exception:
+                logging.exception(f"{ico}: Exception during download")
             finally:
                 progress.update(1)
                 queue.task_done()
 
 async def main():
     DOWNLOAD_DIR.mkdir(exist_ok=True)
-    
+
     if not INPUT_CSV.exists():
         print(f"File {INPUT_CSV} not found. Run batch_scraper.py first.")
         return
@@ -120,8 +121,9 @@ async def main():
     with INPUT_CSV.open("r", encoding="utf-8") as f:
         reader = csv.reader(f)
         header = next(reader, None)
-        if not header: return
-        
+        if not header:
+            return
+
         # Expecting: ico, subjektId, dokumentId, year, documentUrl, sourceType, parserUsed, sourceNotes
         for row in reader:
             if len(row) >= 4:

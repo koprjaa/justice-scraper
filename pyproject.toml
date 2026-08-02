@@ -1,0 +1,48 @@
+[project]
+name = "justice-scraper"
+version = "1.0.0"
+description = "Read financial statement links and figures out of the Czech Justice Registry."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Jan Alexandr Kopřiva", email = "jan.alexandr.kopriva@gmail.com" }]
+keywords = ["czech", "justice-registry", "financial-statements", "scraper", "or.justice.cz"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = ["aiohttp>=3.9", "beautifulsoup4>=4.12", "lxml>=5.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff==0.16.1"]
+
+[project.urls]
+Homepage = "https://github.com/koprjaa/justice-scraper"
+Repository = "https://github.com/koprjaa/justice-scraper"
+Issues = "https://github.com/koprjaa/justice-scraper/issues"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "N", "SIM", "C4", "RET", "PTH", "TRY", "PERF", "RUF"]
+# E501  line length is handled by the formatter, not worth failing CI over
+# TRY003 wants one exception subclass per message. That is ceremony for a
+#        message a reader needs, so informative raises stay.
+ignore = ["E501", "TRY003"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+pythonpath = ["."]
+addopts = "-q --strict-markers"
+
+[tool.uv]
+package = false

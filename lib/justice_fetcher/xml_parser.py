@@ -13,7 +13,7 @@
 #
 
 import xml.etree.ElementTree as ET
-from typing import Callable
+from collections.abc import Callable
 
 from .normalizers import extract_year, normalize_text, parse_number
 

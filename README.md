@@ -5,6 +5,7 @@ Reads the Czech Justice Registry (or.justice.cz) and extracts financial statemen
 ![python](https://img.shields.io/badge/python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![license](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)
 ![status](https://img.shields.io/badge/status-prototype-lightgrey?style=flat-square)
+[![ci](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml)
 
 ## What it does
 
@@ -66,9 +67,20 @@ Three decisions are worth stating.
 - The batch script iterates a numeric subject ID range. It does not accept a list of IČO values and it does not resolve an IČO to a subject ID. The mapping between IDs and companies is not documented here.
 - A company that publishes PDF attachments only returns null financial values from the library.
 - The parser depends on the current HTML and URL layout of or.justice.cz. A layout change breaks it.
-- `test_scraper.py` prints its output and asserts nothing. The financial fetcher has no tests.
+- `test_scraper.py` prints its output and asserts nothing. It exercises the batch script against the live registry, so it is a smoke run rather than a test.
 - The registry field names are Czech: IČO, záverka, vznik listiny, účetní závěrka.
 - Attachment downloads have no rate limit. The repository does not handle CDN throttling.
+- The parser does not know the statement schema. It walks every numeric node and scores the path by the Czech accounting labels along it. A statement that names its rows differently yields nothing rather than a wrong number.
+
+## Development
+
+```bash
+uv run --extra dev ruff check .
+uv run --extra dev pytest -q
+```
+
+The suite covers the number and year parsing and the XML scoring, with no
+network. CI runs on Python 3.10, 3.11, and 3.12, across Linux and Windows.
 
 ## License
 

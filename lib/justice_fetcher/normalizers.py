@@ -20,6 +20,10 @@ from typing import Any
 # Cached to avoid repeated datetime.now() in extract_year()
 _YEAR_UPPER_BOUND = datetime.now(tz=timezone.utc).year + 1
 
+# Currency written next to an amount. Matched after the text is folded to ASCII,
+# so "Kč" arrives here as "kc".
+_CURRENCY_RE = re.compile(r"(kc|czk)")
+
 
 def normalize_text(value: str) -> str:
     return "".join(
@@ -43,7 +47,9 @@ def parse_number(raw: Any) -> float | None:
         return None
 
     value = value.replace("\xa0", "").replace(" ", "")
-    value = re.sub(r"(Kc|CZK)", "", value, flags=re.IGNORECASE)
+    # The registry writes amounts in Kč. Fold the diacritic away before matching,
+    # or the real symbol survives and the digit check below rejects the value.
+    value = _CURRENCY_RE.sub("", normalize_text(value))
     is_negative_brackets = value.startswith("(") and value.endswith(")")
     if is_negative_brackets:
         value = value[1:-1]
