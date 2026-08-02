@@ -18,7 +18,13 @@ from collections.abc import Callable
 from .normalizers import extract_year, normalize_text, parse_number
 
 
-def parse_financial_xml(xml_raw: str, fallback_year: int | None) -> dict[str, float | int | None] | None:
+def parse_financial_xml(xml_raw: str, row_year: int | None) -> dict[str, float | int | None] | None:
+    """Figures out of a financial XML statement.
+
+    row_year is the accounting period the registry printed in brackets on the
+    document row. It is authoritative, so it wins over any year found inside
+    the document, which also carries filing and signature dates.
+    """
     try:
         root = ET.fromstring(xml_raw)
     except ET.ParseError:
@@ -26,7 +32,7 @@ def parse_financial_xml(xml_raw: str, fallback_year: int | None) -> dict[str, fl
 
     nodes = _collect_numeric_nodes(root)
     return {
-        "year": extract_year(xml_raw) or fallback_year,
+        "year": row_year or extract_year(xml_raw),
         "revenue": _pick_best(nodes, _score_revenue),
         "totalAssets": _pick_best(nodes, _score_assets),
         "netProfit": _pick_best(nodes, _score_profit),

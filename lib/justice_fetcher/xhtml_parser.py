@@ -19,13 +19,19 @@ from .financial_text_parser import parse_financials_from_text
 
 def parse_financial_xhtml(
     xhtml_text: str,
-    fallback_year: int | None,
+    row_year: int | None,
 ) -> dict[str, object]:
+    """Figures out of an XHTML statement.
+
+    row_year is the accounting period the registry printed in brackets on the
+    document row. It is authoritative, so it wins over any year found inside the
+    document, which also carries filing and signature dates.
+    """
     soup = BeautifulSoup(xhtml_text, "lxml")
     normalized_text = soup.get_text("\n", strip=True)
     if not normalized_text.strip():
         return {
-            "year": fallback_year,
+            "year": row_year,
             "revenue": None,
             "totalAssets": None,
             "netProfit": None,
@@ -35,6 +41,6 @@ def parse_financial_xhtml(
 
     return parse_financials_from_text(
         normalized_text,
-        fallback_year=fallback_year,
+        row_year=row_year,
         source_notes=["parsed_from_xhtml"],
     )

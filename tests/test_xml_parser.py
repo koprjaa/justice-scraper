@@ -44,28 +44,35 @@ STATEMENT = """<?xml version="1.0" encoding="utf-8"?>
 
 
 def test_the_three_figures_come_out_of_a_statement():
-    result = parse_financial_xml(STATEMENT, fallback_year=None)
+    result = parse_financial_xml(STATEMENT, row_year=None)
     assert result["revenue"] == 15000000
     assert result["totalAssets"] == 42000000
     assert result["netProfit"] == 2500000
 
 
-def test_the_year_is_taken_from_the_document():
-    assert parse_financial_xml(STATEMENT, fallback_year=2020)["year"] == 2023
+def test_the_period_from_the_registry_row_wins_over_the_document():
+    """The row states the accounting period in brackets. The document body also
+    carries filing and signature dates, and preferring those reported ČEZ and
+    Komerční banka a year later than the period they cover."""
+    assert parse_financial_xml(STATEMENT, row_year=2020)["year"] == 2020
 
 
-def test_the_fallback_year_is_used_when_the_document_names_none():
+def test_the_document_year_is_used_when_the_row_names_no_period():
+    assert parse_financial_xml(STATEMENT, row_year=None)["year"] == 2023
+
+
+def test_no_year_anywhere_gives_none():
     xml = "<Vykaz><Trzby>100</Trzby></Vykaz>"
-    assert parse_financial_xml(xml, fallback_year=2019)["year"] == 2019
+    assert parse_financial_xml(xml, row_year=None)["year"] is None
 
 
 def test_malformed_xml_gives_none():
-    assert parse_financial_xml("<Vykaz><Trzby>", fallback_year=None) is None
+    assert parse_financial_xml("<Vykaz><Trzby>", row_year=None) is None
 
 
 def test_a_statement_with_no_recognized_labels_reports_no_figures():
     xml = "<Vykaz><Neco>123</Neco><Jine>456</Jine></Vykaz>"
-    result = parse_financial_xml(xml, fallback_year=2023)
+    result = parse_financial_xml(xml, row_year=2023)
     assert result["revenue"] is None
     assert result["totalAssets"] is None
     assert result["netProfit"] is None
@@ -73,12 +80,12 @@ def test_a_statement_with_no_recognized_labels_reports_no_figures():
 
 def test_an_unrelated_number_is_not_reported_as_revenue():
     """Employee count sits in the same document and must not win."""
-    assert parse_financial_xml(STATEMENT, fallback_year=None)["revenue"] != 25
+    assert parse_financial_xml(STATEMENT, row_year=None)["revenue"] != 25
 
 
 def test_amounts_written_with_their_currency_are_read():
     xml = "<Vykaz><Trzby>15 000 000 Kč</Trzby></Vykaz>"
-    assert parse_financial_xml(xml, fallback_year=None)["revenue"] == 15000000
+    assert parse_financial_xml(xml, row_year=None)["revenue"] == 15000000
 
 
 # --- node collection --------------------------------------------------------

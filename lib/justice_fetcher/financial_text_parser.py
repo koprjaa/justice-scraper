@@ -24,7 +24,7 @@ _CONFIDENCE_MEDIUM_THRESHOLD = 8
 
 def parse_financials_from_text(
     text: str,
-    fallback_year: int | None,
+    row_year: int | None,
     source_notes: list[str] | None = None,
 ) -> dict[str, object]:
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -36,7 +36,8 @@ def parse_financials_from_text(
     )
 
     return {
-        "year": extract_year(text) or fallback_year,
+        # The registry's bracketed period beats any date inside the document.
+        "year": row_year or extract_year(text),
         "revenue": revenue,
         "totalAssets": assets,
         "netProfit": profit,

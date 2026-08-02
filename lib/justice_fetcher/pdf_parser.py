@@ -22,7 +22,7 @@ from .financial_text_parser import parse_financials_from_text
 
 def parse_financial_pdf(
     pdf_bytes: bytes,
-    fallback_year: int | None,
+    row_year: int | None,
 ) -> dict[str, object]:
     source_notes: list[str] = []
     text_content = _extract_pdf_text(pdf_bytes, source_notes)
@@ -34,7 +34,7 @@ def parse_financial_pdf(
 
     if not text_content.strip():
         return {
-            "year": fallback_year,
+            "year": row_year,
             "revenue": None,
             "totalAssets": None,
             "netProfit": None,
@@ -44,7 +44,7 @@ def parse_financial_pdf(
 
     return parse_financials_from_text(
         text_content,
-        fallback_year=fallback_year,
+        row_year=row_year,
         source_notes=source_notes or ["parsed_from_pdf_text"],
     )
 

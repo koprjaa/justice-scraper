@@ -14,6 +14,8 @@
 
 """Tests for the text, year and number parsing behind the financial extraction."""
 
+from datetime import datetime, timezone
+
 import pytest
 
 from lib.justice_fetcher.normalizers import extract_year, normalize_text, parse_number
@@ -49,6 +51,47 @@ def test_the_year_is_read_out_of_free_text():
 def test_the_latest_year_wins_when_several_appear():
     """A statement names the year it covers and the one it compares against."""
     assert extract_year("období 2022 a 2023") == 2023
+
+
+# --- the accounting period versus the filing date ----------------------------
+
+ROW = (
+    "B 1581/SL315/MSPH účetní závěrka [2025] , výroční zpráva [2025] , "
+    "zpráva o vztazích [2025] , zpráva auditora [2025] ve formátu XHTML "
+    "31.12.2025 8.7.2026 13.7.2026"
+)
+
+
+def test_a_document_row_gives_the_period_not_the_filing_date():
+    """The registry writes the period in brackets and the filing dates after it.
+
+    Taking the largest year on the row returned 2026, the day the 2025 statement
+    was filed, so every record was reported one year late.
+    """
+    assert extract_year(ROW) == 2025
+
+
+def test_a_bracketed_year_beats_a_larger_bare_one():
+    assert extract_year("závěrka [2021] uloženo 15.6.2024") == 2021
+
+
+def test_the_latest_bracketed_year_wins_when_a_row_lists_several():
+    assert extract_year("závěrka [2023] , výroční zpráva [2024] 30.6.2025") == 2024
+
+
+def test_a_year_after_this_one_is_not_a_period_any_document_can_cover():
+    next_year = datetime.now(tz=timezone.utc).year + 1
+    assert extract_year(f"účetní závěrka za rok {next_year}") is None
+
+
+def test_a_statement_that_mentions_a_future_year_falls_back_to_a_real_one():
+    this_year = datetime.now(tz=timezone.utc).year
+    text = f"srovnávací období {this_year - 1} a {this_year}, splatnost {this_year + 1}"
+    assert extract_year(text) == this_year
+
+
+def test_brackets_holding_something_other_than_a_year_are_ignored():
+    assert extract_year("závěrka [SL315] za rok 2022") == 2022
 
 
 @pytest.mark.parametrize("value", ["", "bez roku", "rok 1899", "rok 2100", "12345"])

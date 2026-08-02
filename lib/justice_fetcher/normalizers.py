@@ -17,8 +17,17 @@ import unicodedata
 from datetime import datetime, timezone
 from typing import Any
 
-# Cached to avoid repeated datetime.now() in extract_year()
-_YEAR_UPPER_BOUND = datetime.now(tz=timezone.utc).year + 1
+# The registry prints the accounting period in square brackets and the filing
+# dates after it:
+#   "účetní závěrka [2025] , výroční zpráva [2025] ... 31.12.2025 8.7.2026"
+# A bracketed year is therefore the period, and any year outside the brackets on
+# such a row is a date the document was filed or published.
+_BRACKETED_YEAR_RE = re.compile(r"\[\s*((?:19|20)\d{2})\s*\]")
+
+_YEAR_RE = re.compile(r"\b(?:19|20)\d{2}\b")
+
+# The registry itself starts in 1990.
+_YEAR_LOWER_BOUND = 1990
 
 # Currency written next to an amount. Matched after the text is folded to ASCII,
 # so "Kč" arrives here as "kc".
@@ -32,8 +41,23 @@ def normalize_text(value: str) -> str:
 
 
 def extract_year(value: str) -> int | None:
-    years = [int(y) for y in re.findall(r"\b(?:19|20)\d{2}\b", value)]
-    return max((y for y in years if 1990 <= y <= _YEAR_UPPER_BOUND), default=None)
+    """The accounting period a document covers.
+
+    A bracketed year wins outright. On a document row the brackets hold the
+    period and the bare numbers after them are the balance sheet date and the
+    filing dates, so taking the largest year on the row returned the year the
+    document was filed. Every record came back one year late, and a statement
+    filed in January came back for a period that had not ended.
+
+    Without brackets the text is the statement itself, which names the period it
+    covers and the one it compares against. The later of those is the period, so
+    the largest year is right there. A year after this one is not a period any
+    filed document can cover, so it is ignored.
+    """
+    bracketed = [int(y) for y in _BRACKETED_YEAR_RE.findall(value)]
+    candidates = bracketed or [int(y) for y in _YEAR_RE.findall(value)]
+    upper = datetime.now(tz=timezone.utc).year
+    return max((y for y in candidates if _YEAR_LOWER_BOUND <= y <= upper), default=None)
 
 
 def parse_number(raw: Any) -> float | None:
