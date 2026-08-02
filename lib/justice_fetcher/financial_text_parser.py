@@ -35,15 +35,45 @@ def parse_financials_from_text(
         ("vysledek hospodareni", "zisk", "ztrata", "hospodareni"),
     )
 
+    confidence = _overall_confidence(revenue_conf, assets_conf, profit_conf)
+    notes = list(source_notes or [])
+
+    # A statement whose own figures contradict each other was misread, whatever
+    # the keywords suggested. Komerční banka came back with revenue 1 against
+    # assets of 1.5 million and was labelled high.
+    failed = _implausible(revenue, assets, profit)
+    if failed:
+        notes.extend(failed)
+        confidence = "low"
+
     return {
         # The registry's bracketed period beats any date inside the document.
         "year": row_year or extract_year(text),
         "revenue": revenue,
         "totalAssets": assets,
         "netProfit": profit,
-        "confidence": _overall_confidence(revenue_conf, assets_conf, profit_conf),
-        "sourceNotes": source_notes or [],
+        "confidence": confidence,
+        "sourceNotes": notes,
     }
+
+
+def _implausible(
+    revenue: float | None, assets: float | None, profit: float | None
+) -> list[str]:
+    """Names every internal contradiction in a set of figures.
+
+    These are not accounting rules, they are the shapes a misread produces. A
+    real statement can be unusual, so a hit downgrades the confidence and says
+    why rather than dropping the figures.
+    """
+    notes = []
+    if revenue is not None and profit is not None and revenue > 0 and abs(profit) > revenue:
+        notes.append("profit_exceeds_revenue")
+    if revenue is not None and assets is not None and revenue > 0 and assets > revenue * 10_000:
+        notes.append("revenue_negligible_against_assets")
+    if revenue is not None and 1990 <= revenue <= 2100 and revenue == int(revenue):
+        notes.append("revenue_looks_like_a_year")
+    return notes
 
 
 def _find_metric_from_lines(
@@ -55,9 +85,13 @@ def _find_metric_from_lines(
 
     for index, line in enumerate(lines):
         normalized = normalize_text(line)
-        score = sum(_SCORE_KEYWORD_WEIGHT for keyword in keywords if keyword in normalized)
-        if score == 0:
+        # One line, one keyword match. Several of the keywords for a metric
+        # overlap, so a line reading "vysledek hospodareni" used to match both
+        # that phrase and "hospodareni" and score twice, which put it over the
+        # high threshold on its own, whatever number stood next to it.
+        if not any(keyword in normalized for keyword in keywords):
             continue
+        score = _SCORE_KEYWORD_WEIGHT
 
         numbers = _extract_numbers(line)
         if not numbers and index + 1 < len(lines):
@@ -97,5 +131,13 @@ def _score_number_candidate(value: float) -> int:
 
 
 def _overall_confidence(*parts: ConfidenceLevel) -> ConfidenceLevel:
+    """The weakest figure that was actually found.
+
+    Taking the best of the three let one well matched field carry a record whose
+    other figures were guesses. A record is worth what its weakest number is
+    worth. Fields that were not found at all say nothing either way, so they do
+    not drag the rest down.
+    """
     ordered: dict[ConfidenceLevel, int] = {"none": 0, "low": 1, "medium": 2, "high": 3}
-    return max(parts, key=lambda item: ordered[item], default="none")
+    found = [p for p in parts if p != "none"]
+    return min(found, key=lambda item: ordered[item], default="none")

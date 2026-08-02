@@ -70,7 +70,9 @@ Three decisions are worth stating.
 - `test_scraper.py` prints its output and asserts nothing. It exercises the batch script against the live registry, so it is a smoke run rather than a test.
 - The registry field names are Czech: IČO, záverka, vznik listiny, účetní závěrka.
 - Attachment downloads have no rate limit. The repository does not handle CDN throttling.
-- The parser does not know the statement schema. It walks every numeric node and scores the path by the Czech accounting labels along it. A statement that names its rows differently yields nothing rather than a wrong number.
+- The parser does not know the statement schema. It walks every numeric node and scores the path by the Czech accounting labels along it. It does return wrong numbers. Read against the live registry it reported revenue of 1 for Komerční banka and a profit larger than the revenue for ČEZ. Treat the figures as a lead, not as data.
+- A record whose figures contradict each other is marked `confidence: low` and carries a note naming the contradiction: `profit_exceeds_revenue`, `revenue_negligible_against_assets`, `revenue_looks_like_a_year`. These catch the shapes a misread produces, not every wrong number. Only `confidence: high` with no notes is worth anything, and even that is a keyword match rather than a schema read.
+- Getting the figures right needs the structured statement rather than its rendered XHTML. That is a different piece of work and it is not in here.
 
 ## Development
 
