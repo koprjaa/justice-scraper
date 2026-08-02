@@ -3,7 +3,7 @@
 # File:    logging_utils.py
 #
 # Description:
-# Status logging and default console handler for the fetcher.
+# Status logging and the default console handler for the fetcher.
 #
 # Author:
 # Jan Alexandr Kopřiva

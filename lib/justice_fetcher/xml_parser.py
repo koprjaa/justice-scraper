@@ -3,7 +3,7 @@
 # File:    xml_parser.py
 #
 # Description:
-# Extracts revenue, assets, and profit from justice.cz financial XML.
+# Extracts revenue, assets, and profit from a justice.cz financial XML statement.
 #
 # Author:
 # Jan Alexandr Kopřiva

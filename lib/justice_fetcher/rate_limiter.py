@@ -3,7 +3,7 @@
 # File:    rate_limiter.py
 #
 # Description:
-# Async rate limiter for spacing navigation requests to justice.cz.
+# Async rate limiter that spaces the navigation requests to justice.cz.
 #
 # Author:
 # Jan Alexandr Kopřiva

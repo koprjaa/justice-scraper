@@ -1,3 +1,17 @@
+#
+# Project: justice-scraper
+# File:    test_xml_parser.py
+#
+# Description:
+# Tests for pulling revenue, assets, and profit out of a financial XML statement.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
+
 """Tests for pulling revenue, assets and profit out of a financial XML statement.
 
 The parser does not know the schema. It walks every numeric node, scores the

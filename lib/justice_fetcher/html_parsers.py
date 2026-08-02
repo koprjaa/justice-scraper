@@ -3,7 +3,7 @@
 # File:    html_parsers.py
 #
 # Description:
-# Parses justice.cz HTML to extract subjektId, document candidates, and attachment URLs.
+# Parses justice.cz HTML for the subject ID, the document list, and the attachment URLs.
 #
 # Author:
 # Jan Alexandr Kopřiva

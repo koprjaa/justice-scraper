@@ -3,7 +3,7 @@
 # File:    normalizers.py
 #
 # Description:
-# Text normalization and number/year parsing for financial data.
+# Text normalization and number and year parsing for the financial data.
 #
 # Author:
 # Jan Alexandr Kopřiva

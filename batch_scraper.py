@@ -1,3 +1,17 @@
+#
+# Project: justice-scraper
+# File:    batch_scraper.py
+#
+# Description:
+# Runs the scraper over a list of subject IDs read from a CSV, several at a time.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
+
 import asyncio
 import csv
 import logging

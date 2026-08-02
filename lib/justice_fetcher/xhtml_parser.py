@@ -3,7 +3,7 @@
 # File:    xhtml_parser.py
 #
 # Description:
-# Extracts financials from XHTML attachment content.
+# Extracts the financial figures from an XHTML attachment.
 #
 # Author:
 # Jan Alexandr Kopřiva

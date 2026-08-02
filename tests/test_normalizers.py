@@ -1,3 +1,17 @@
+#
+# Project: justice-scraper
+# File:    test_normalizers.py
+#
+# Description:
+# Tests for the text, year, and number parsing behind the financial extraction.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
+
 """Tests for the text, year and number parsing behind the financial extraction."""
 
 import pytest

@@ -3,7 +3,7 @@
 # File:    config.py
 #
 # Description:
-# URL templates, timeouts, rate limits, and feature flags for the justice fetcher.
+# URL templates, timeouts, retry counts, and rate limits for the justice fetcher.
 #
 # Author:
 # Jan Alexandr Kopřiva

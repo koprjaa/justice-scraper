@@ -3,7 +3,7 @@
 # File:    models.py
 #
 # Description:
-# Data classes for document candidates, financial records, and API result shape.
+# Dataclasses for a document candidate, a financial record, and the result shape.
 #
 # Author:
 # Jan Alexandr Kopřiva

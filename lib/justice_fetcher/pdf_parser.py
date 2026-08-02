@@ -3,7 +3,7 @@
 # File:    pdf_parser.py
 #
 # Description:
-# Extracts text from PDF attachments (text layer or OCR) and parses financials.
+# Reads text from a PDF attachment, by text layer or by OCR, and parses the financials out of it.
 #
 # Author:
 # Jan Alexandr Kopřiva

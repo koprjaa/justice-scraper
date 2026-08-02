@@ -3,7 +3,7 @@
 # File:    http_client.py
 #
 # Description:
-# HTTP client with rate limiting and attachment-specific timeout/retry for justice.cz.
+# HTTP client for justice.cz with rate limiting and a separate timeout and retry policy for attachments.
 #
 # Author:
 # Jan Alexandr Kopřiva

@@ -3,7 +3,7 @@
 # File:    financial_text_parser.py
 #
 # Description:
-# Keyword-based extraction of revenue, assets, and profit from plain text.
+# Keyword based extraction of revenue, assets, and profit from plain text.
 #
 # Author:
 # Jan Alexandr Kopřiva

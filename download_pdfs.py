@@ -1,3 +1,17 @@
+#
+# Project: justice-scraper
+# File:    download_pdfs.py
+#
+# Description:
+# Downloads the document files listed in the scraper output.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
+
 import asyncio
 import csv
 import html

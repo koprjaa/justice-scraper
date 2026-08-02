@@ -3,7 +3,7 @@
 # File:    __init__.py
 #
 # Description:
-# Package entry point; exposes fetch_justice_financials.
+# Package entry point. Exposes fetch_justice_financials.
 #
 # Author:
 # Jan Alexandr Kopřiva

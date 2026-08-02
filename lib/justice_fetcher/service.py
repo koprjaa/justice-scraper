@@ -3,7 +3,7 @@
 # File:    service.py
 #
 # Description:
-# Orchestrates the three-step fetch (subjektId, document list, attachments) and parses financials from XML/XHTML.
+# Runs the three step fetch, subject ID then document list then attachments, and parses the financials from XML or XHTML.
 #
 # Author:
 # Jan Alexandr Kopřiva

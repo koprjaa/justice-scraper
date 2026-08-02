@@ -3,7 +3,7 @@
 # File:    justice_scraper.py
 #
 # Description:
-# Scrapes the Czech Justice Registry for subject IDs and writes záverka document links to CSV.
+# Walks a range of Czech Justice Registry subject IDs and writes the closing report document links to CSV.
 #
 # Author:
 # Jan Alexandr Kopřiva
