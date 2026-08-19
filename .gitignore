@@ -3,3 +3,12 @@ __pycache__/
 *.pyc
 scraper.log
 document_links.csv
+
+# Scraped output. These are fetched from justice.cz, not authored here, and a
+# full run puts megabytes of them in the tree.
+texts/
+*.log
+PO_ALL.csv
+financials_links.csv
+test_links.csv
+pdfs/
