@@ -1,7 +1,7 @@
 [project]
 name = "justice-scraper"
 version = "1.0.0"
-description = "Read financial statement links and figures out of the Czech Justice Registry."
+description = "Pulls financial statement links and figures from the Czech Justice Registry."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
