@@ -57,9 +57,7 @@ def parse_financials_from_text(
     }
 
 
-def _implausible(
-    revenue: float | None, assets: float | None, profit: float | None
-) -> list[str]:
+def _implausible(revenue: float | None, assets: float | None, profit: float | None) -> list[str]:
     """Names every internal contradiction in a set of figures.
 
     These are not accounting rules, they are the shapes a misread produces. A

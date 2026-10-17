@@ -93,9 +93,7 @@ async def _fetch_financials_with_client(client: JusticeHttpClient, ico: str) -> 
         log_status("justice-scraper ico=%s status=subjekt_not_found", ico)
         return empty_result(ico).to_dict()
 
-    list_html = await client.fetch_text(
-        STEP2_URL.format(subjekt_id=subjekt_id), ico, "step2_documents"
-    )
+    list_html = await client.fetch_text(STEP2_URL.format(subjekt_id=subjekt_id), ico, "step2_documents")
     if list_html is None:
         log_status("justice-scraper ico=%s subjektId=%s status=documents_failed", ico, subjekt_id)
         return empty_result(ico, subjekt_id).to_dict()
@@ -137,12 +135,16 @@ async def _process_candidate(
 
     detail_html = await client.fetch_text(detail_url, ico, f"step3_detail_{candidate.dokument_id}")
     if detail_html is None:
-        return _fallback_record(fallback_year, detail_url, candidate.dokument_id, ["document_detail_unavailable"])
+        return _fallback_record(
+            fallback_year, detail_url, candidate.dokument_id, ["document_detail_unavailable"]
+        )
 
     xml_url, xhtml_url, pdf_url = extract_attachment_urls(detail_html, candidate.dokument_id)
 
     if xml_url:
-        xml_text = await client.fetch_text(xml_url, ico, f"step3_xml_{candidate.dokument_id}", referer=detail_url)
+        xml_text = await client.fetch_text(
+            xml_url, ico, f"step3_xml_{candidate.dokument_id}", referer=detail_url
+        )
         if xml_text is not None:
             parsed = parse_financial_xml(xml_text, candidate.year)
             if parsed is not None:
@@ -160,7 +162,9 @@ async def _process_candidate(
                 )
 
     if xhtml_url:
-        xhtml_text = await client.fetch_text(xhtml_url, ico, f"step3_xhtml_{candidate.dokument_id}", referer=detail_url)
+        xhtml_text = await client.fetch_text(
+            xhtml_url, ico, f"step3_xhtml_{candidate.dokument_id}", referer=detail_url
+        )
         if xhtml_text is not None:
             parsed_xhtml = parse_financial_xhtml(xhtml_text, candidate.year)
             return FinancialRecord(
@@ -190,10 +194,14 @@ async def _process_candidate(
             source_notes=["pdf_url_collected_not_parsed"],
         )
 
-    return _fallback_record(fallback_year, detail_url, candidate.dokument_id, ["no_xml_xhtml_or_pdf_attachment_found"])
+    return _fallback_record(
+        fallback_year, detail_url, candidate.dokument_id, ["no_xml_xhtml_or_pdf_attachment_found"]
+    )
 
 
-def _fallback_record(year: int, document_url: str, dokument_id: str | None, source_notes: list[str]) -> FinancialRecord:
+def _fallback_record(
+    year: int, document_url: str, dokument_id: str | None, source_notes: list[str]
+) -> FinancialRecord:
     return FinancialRecord(
         year=year,
         revenue=None,

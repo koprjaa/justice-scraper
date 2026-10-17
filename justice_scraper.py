@@ -192,7 +192,9 @@ async def scrape_range(start_id: int, end_id: int) -> int:
             writer = csv.writer(output)
             writer.writerow(["ico", "vznik_listiny", "link", "typ"])
 
-            progress = tqdm(asyncio.as_completed(tasks), total=end_id - start_id + 1, desc="Scraping", unit="subjekt")
+            progress = tqdm(
+                asyncio.as_completed(tasks), total=end_id - start_id + 1, desc="Scraping", unit="subjekt"
+            )
             for task in progress:
                 try:
                     result = await task

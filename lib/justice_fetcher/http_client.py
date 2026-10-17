@@ -71,14 +71,11 @@ class JusticeHttpClient:
     ) -> str | bytes | None:
         attachment = _is_attachment_step(step)
         max_retries = ATTACHMENT_MAX_RETRIES if attachment else MAX_RETRIES
-        timeout = (
-            aiohttp.ClientTimeout(total=ATTACHMENT_TIMEOUT_SECONDS)
-            if attachment
-            else None
-        )
+        timeout = aiohttp.ClientTimeout(total=ATTACHMENT_TIMEOUT_SECONDS) if attachment else None
         headers = {
             "User-Agent": random.choice(USER_AGENTS),
-            "Referer": referer or f"{JUSTICE_ORIGIN}/ias/ui/",  # required or server returns HTML instead of file
+            "Referer": referer
+            or f"{JUSTICE_ORIGIN}/ias/ui/",  # required or server returns HTML instead of file
         }
 
         for attempt in range(max_retries + 1):

@@ -88,9 +88,7 @@ def _extract_pdf_text_with_ocr(pdf_bytes: bytes, source_notes: list[str]) -> str
     try:
         pdf = pdfium.PdfDocument(pdf_bytes)
         for page_index in range(min(len(pdf), 5)):
-            text = pytesseract.image_to_string(
-                pdf[page_index].render(scale=2.0).to_pil(), lang="ces+eng"
-            )
+            text = pytesseract.image_to_string(pdf[page_index].render(scale=2.0).to_pil(), lang="ces+eng")
             if text.strip():
                 chunks.append(text)
         if chunks:

@@ -116,7 +116,7 @@ def test_the_source_notes_that_were_passed_in_survive():
 
 
 def test_an_overlapping_keyword_does_not_score_twice():
-    """"vysledek hospodareni" also contains "hospodareni". Counting both put a
+    """ "vysledek hospodareni" also contains "hospodareni". Counting both put a
     single line over the high threshold whatever number stood next to it."""
     result = parse("Výsledek hospodaření\n7\n")
     assert result["confidence"] != "high"

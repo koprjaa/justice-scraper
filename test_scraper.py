@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #
 # Project: justice-scraper
 # File:    test_scraper.py
@@ -72,6 +71,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\nERROR: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
-

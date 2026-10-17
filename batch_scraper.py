@@ -31,6 +31,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("batch_scraper.log", "a", "utf-8")],
 )
 
+
 async def worker(queue: asyncio.Queue, progress, lock, writer, f):
     while True:
         ico = await queue.get()
@@ -53,16 +54,7 @@ async def worker(queue: asyncio.Queue, progress, lock, writer, f):
                     for fin in res["financials"]
                 )
             else:
-                rows_to_write.append([
-                    res["ico"],
-                    res.get("subjektId", ""),
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "no_records"
-                ])
+                rows_to_write.append([res["ico"], res.get("subjektId", ""), "", "", "", "", "", "no_records"])
 
             async with lock:
                 for row in rows_to_write:
@@ -74,6 +66,7 @@ async def worker(queue: asyncio.Queue, progress, lock, writer, f):
         finally:
             progress.update(1)
             queue.task_done()
+
 
 async def main():
     processed_icos = set()
@@ -112,13 +105,26 @@ async def main():
     try:
         writer = csv.writer(f)
         if mode == "w":
-            writer.writerow(["ico", "subjektId", "dokumentId", "year", "documentUrl", "sourceType", "parserUsed", "sourceNotes"])
+            writer.writerow(
+                [
+                    "ico",
+                    "subjektId",
+                    "dokumentId",
+                    "year",
+                    "documentUrl",
+                    "sourceType",
+                    "parserUsed",
+                    "sourceNotes",
+                ]
+            )
             f.flush()
 
         lock = asyncio.Lock()
         progress = tqdm(total=len(icos), desc="Scraping ICOs")
 
-        workers = [asyncio.create_task(worker(queue, progress, lock, writer, f)) for _ in range(MAX_CONCURRENT)]
+        workers = [
+            asyncio.create_task(worker(queue, progress, lock, writer, f)) for _ in range(MAX_CONCURRENT)
+        ]
 
         await queue.join()
 
@@ -126,6 +132,7 @@ async def main():
             w.cancel()
     finally:
         f.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

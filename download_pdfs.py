@@ -35,6 +35,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler("pdf_downloader.log", "a", "utf-8")],
 )
 
+
 async def download_worker(queue: asyncio.Queue, progress: tqdm):
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
@@ -86,7 +87,7 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
 
                 # Find the actual download link (the one that expires)
                 dl_links = re.findall(r'href="([^"]+)"', detail_html)
-                dl_matches = [link for link in dl_links if 'download' in link and 'GDPR' not in link]
+                dl_matches = [link for link in dl_links if "download" in link and "GDPR" not in link]
 
                 if not dl_matches:
                     logging.error(f"{ico}: No download link found on detail page.")
@@ -124,6 +125,7 @@ async def download_worker(queue: asyncio.Queue, progress: tqdm):
                 progress.update(1)
                 queue.task_done()
 
+
 async def main():
     DOWNLOAD_DIR.mkdir(exist_ok=True)
 
@@ -160,6 +162,7 @@ async def main():
 
     for w in workers:
         w.cancel()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
