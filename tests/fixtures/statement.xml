@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UcetniZaverka rok="2023">
+  <Vykaz>
+    <Trzby>15000000</Trzby>
+    <AktivaCelkem>42000000</AktivaCelkem>
+    <VysledekHospodareni>2500000</VysledekHospodareni>
+    <PocetZamestnancu>25</PocetZamestnancu>
+  </Vykaz>
+</UcetniZaverka>
