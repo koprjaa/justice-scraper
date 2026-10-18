@@ -52,13 +52,15 @@ impl RateLimiter {
     pub fn new(seconds: f64) -> Self {
         Self {
             last: AsyncMutex::new(None),
-            interval: Duration::from_secs_f64(seconds),
+            interval: Duration::try_from_secs_f64(seconds).unwrap_or_default(),
         }
     }
     pub async fn wait_turn(&self) {
         let mut last = self.last.lock().await;
         if let Some(t) = *last {
-            tokio::time::sleep(self.interval.saturating_sub(t.elapsed())).await;
+            if let Some(deadline) = t.checked_add(self.interval) {
+                tokio::time::sleep_until(tokio::time::Instant::from_std(deadline)).await;
+            }
         }
         *last = Some(Instant::now());
     }

@@ -6,34 +6,71 @@
 use chrono::{Datelike, Utc};
 use regex::Regex;
 use serde_json::{json, Value};
-use unicode_normalization::{char::is_combining_mark, UnicodeNormalization};
+use std::sync::LazyLock;
+use unicode_normalization::UnicodeNormalization;
 
+pub fn python_whitespace(c: char) -> bool {
+    c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}')
+}
 pub fn normalize_text(s: &str) -> String {
-    s.nfd()
-        .filter(|c| !is_combining_mark(*c))
-        .collect::<String>()
+    static MARKS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\p{Mn}").unwrap());
+    MARKS
+        .replace_all(&s.nfd().collect::<String>(), "")
         .to_lowercase()
 }
+pub fn decimal_ascii(s: &str) -> Option<String> {
+    static DIGIT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^\p{Nd}$").unwrap());
+    s.chars()
+        .map(|c| {
+            if c.is_ascii_digit() {
+                return Some(c);
+            }
+            if !DIGIT.is_match(c.encode_utf8(&mut [0; 4])) {
+                return None;
+            }
+            // Decimal digit blocks contain successive groups of ten code points.
+            let mut start = c as u32;
+            while let Some(previous) = char::from_u32(start - 1) {
+                if !DIGIT.is_match(previous.encode_utf8(&mut [0; 4])) {
+                    break;
+                }
+                start -= 1;
+            }
+            char::from_digit((c as u32 - start) % 10, 10)
+        })
+        .collect()
+}
 pub fn extract_year(s: &str) -> Option<i32> {
-    let bracket = Regex::new(r"\[\s*((?:19|20)\d{2})\s*\]").unwrap();
-    let plain = Regex::new(r"\b((?:19|20)\d{2})\b").unwrap();
-    let mut years: Vec<i32> = bracket
-        .captures_iter(s)
-        .filter_map(|c| c[1].parse().ok())
-        .collect();
-    if years.is_empty() {
-        years = plain
-            .captures_iter(s)
-            .filter_map(|c| c[1].parse().ok())
-            .collect();
-    }
-    years
+    static BRACKET: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"\[[\s\x1c-\x1f]*((?:19|20)\d{2})[\s\x1c-\x1f]*\]").unwrap());
+    static PLAIN: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?:19|20)\d{2}").unwrap());
+    static WORD: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[\p{L}\p{N}_]$").unwrap());
+    let bracketed: Vec<_> = BRACKET.captures_iter(s).map(|c| c[1].to_owned()).collect();
+    let candidates = if bracketed.is_empty() {
+        PLAIN
+            .find_iter(s)
+            .filter(|m| {
+                [
+                    s[..m.start()].chars().next_back(),
+                    s[m.end()..].chars().next(),
+                ]
+                .into_iter()
+                .flatten()
+                .all(|c| !WORD.is_match(c.encode_utf8(&mut [0; 4])))
+            })
+            .map(|m| m.as_str().to_owned())
+            .collect()
+    } else {
+        bracketed
+    };
+    candidates
         .into_iter()
+        .filter_map(|s| decimal_ascii(&s)?.parse::<i32>().ok())
         .filter(|y| (1990..=Utc::now().year()).contains(y))
         .max()
 }
 pub fn parse_number(s: &str) -> Option<f64> {
-    let mut s = normalize_text(s.trim())
+    let mut s = normalize_text(s.trim_matches(python_whitespace))
         .replace([' ', '\u{a0}'], "")
         .replace("kc", "")
         .replace("czk", "");
@@ -150,8 +187,11 @@ fn metric(lines: &[&str], keys: &[&str]) -> (Option<f64>, &'static str) {
 }
 pub fn parse_financials_from_text(text: &str, year: Option<i32>, mut notes: Vec<String>) -> Value {
     let lines: Vec<_> = text
-        .lines()
-        .map(str::trim)
+        .split([
+            '\n', '\r', '\u{b}', '\u{c}', '\u{1c}', '\u{1d}', '\u{1e}', '\u{85}', '\u{2028}',
+            '\u{2029}',
+        ])
+        .map(|s| s.trim_matches(python_whitespace))
         .filter(|l| !l.is_empty())
         .collect();
     let (r, rc) = metric(&lines, &["trzby", "obrat", "vykony", "i."]);
@@ -186,29 +226,87 @@ pub fn score(path: &str, metric: usize) -> i32 {
             0
         }
 }
-pub fn collect_numeric_nodes(xml: &str) -> Option<Vec<(String, f64)>> {
-    let doc = roxmltree::Document::parse(xml).ok()?;
-    fn walk(n: roxmltree::Node<'_, '_>, parent: &str, out: &mut Vec<(String, f64)>) {
-        let path = if parent.is_empty() {
-            n.tag_name().name().to_owned()
+fn xml_depth_safe(xml: &str) -> bool {
+    let mut remaining = xml;
+    let mut depth = 0usize;
+    while let Some(start) = remaining.find('<') {
+        remaining = &remaining[start..];
+        let special = if remaining.starts_with("<!--") {
+            Some(("-->", 4))
+        } else if remaining.starts_with("<![CDATA[") {
+            Some(("]]>", 9))
+        } else if remaining.starts_with("<?") {
+            Some(("?>", 2))
         } else {
-            format!("{parent}.{}", n.tag_name().name())
+            None
         };
-        if let Some(t) = n
-            .first_child()
-            .filter(|c| c.is_text())
-            .and_then(|c| c.text())
-        {
-            if let Some(v) = parse_number(t) {
-                out.push((path.clone(), v));
+        if let Some((end, skip)) = special {
+            let Some(position) = remaining[skip..].find(end) else {
+                return false;
+            };
+            remaining = &remaining[skip + position + end.len()..];
+            continue;
+        }
+        if remaining.starts_with("<!") {
+            return false;
+        }
+        let mut quote = None;
+        let mut end = None;
+        for (i, c) in remaining.char_indices().skip(1) {
+            if Some(c) == quote {
+                quote = None;
+            } else if quote.is_none() {
+                if c == '\'' || c == '"' {
+                    quote = Some(c);
+                } else if c == '>' {
+                    end = Some(i);
+                    break;
+                }
             }
         }
-        for c in n.children().filter(|c| c.is_element()) {
-            walk(c, &path, out);
+        let Some(end) = end else {
+            return false;
+        };
+        if remaining.starts_with("</") {
+            depth = depth.saturating_sub(1);
+        } else {
+            depth += 1;
+            // roxmltree's recursive parser can overflow the thread stack first.
+            if depth > 128 {
+                return false;
+            }
+            if remaining[..end].ends_with('/') {
+                depth -= 1;
+            }
+        }
+        remaining = &remaining[end + 1..];
+    }
+    true
+}
+pub fn collect_numeric_nodes(xml: &str) -> Option<Vec<(String, f64)>> {
+    if !xml_depth_safe(xml) {
+        return None;
+    }
+    let doc = roxmltree::Document::parse(xml).ok()?;
+    let mut out = vec![];
+    for node in doc.descendants().filter(|n| n.is_element()) {
+        // ElementTree discards comments and processing instructions, joining text
+        // before the first child element into a single numeric value.
+        let text: String = node
+            .children()
+            .take_while(|n| !n.is_element())
+            .filter_map(|n| if n.is_text() { n.text() } else { None })
+            .collect();
+        if let Some(value) = parse_number(&text) {
+            let mut tags: Vec<_> = node
+                .ancestors()
+                .filter(|n| n.is_element())
+                .map(|n| n.tag_name().name())
+                .collect();
+            tags.reverse();
+            out.push((tags.join("."), value));
         }
     }
-    let mut out = vec![];
-    walk(doc.root_element(), "", &mut out);
     Some(out)
 }
 pub fn pick_best(nodes: &[(String, f64)], metric: usize) -> Option<f64> {
@@ -296,12 +394,52 @@ pub fn parse_financial_pdf(bytes: &[u8], year: Option<i32>) -> Value {
         parse_financials_from_text(&text, year, notes)
     }
 }
+pub fn command_output(
+    command: &mut std::process::Command,
+    timeout: std::time::Duration,
+) -> std::io::Result<std::process::Output> {
+    use std::{
+        io::{Read, Seek},
+        process::Stdio,
+        time::Instant,
+    };
+    let mut stdout = tempfile::tempfile()?;
+    let mut child = command
+        .stdout(Stdio::from(stdout.try_clone()?))
+        .stderr(Stdio::null())
+        .spawn()?;
+    let started = Instant::now();
+    let status = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break status,
+            Ok(None) if started.elapsed() < timeout => {
+                std::thread::sleep(std::time::Duration::from_millis(10))
+            }
+            result => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(result.err().unwrap_or_else(|| {
+                    std::io::Error::new(std::io::ErrorKind::TimedOut, "OCR command timed out")
+                }));
+            }
+        }
+    };
+    stdout.rewind()?;
+    let mut bytes = vec![];
+    stdout.read_to_end(&mut bytes)?;
+    Ok(std::process::Output {
+        status,
+        stdout: bytes,
+        stderr: vec![],
+    })
+}
 fn ocr_pdf(bytes: &[u8]) -> Result<String, &'static str> {
-    use std::{fs, process::Command};
-    if !Command::new("tesseract")
-        .arg("--version")
-        .output()
-        .is_ok_and(|o| o.status.success())
+    use std::{fs, process::Command, time::Duration};
+    if !command_output(
+        Command::new("tesseract").arg("--version"),
+        Duration::from_secs(5),
+    )
+    .is_ok_and(|o| o.status.success())
     {
         return Err("tesseract_binary_unavailable");
     }
@@ -309,12 +447,20 @@ fn ocr_pdf(bytes: &[u8]) -> Result<String, &'static str> {
     let input = dir.path().join("input.pdf");
     fs::write(&input, bytes).map_err(|_| "ocr_failed")?;
     let prefix = dir.path().join("page");
-    let result = Command::new("pdftoppm")
-        .args(["-f", "1", "-l", "5", "-r", "144", "-png"])
-        .arg(input)
-        .arg(&prefix)
-        .output()
-        .map_err(|_| "ocr_dependencies_unavailable")?;
+    let result = command_output(
+        Command::new("pdftoppm")
+            .args(["-f", "1", "-l", "5", "-r", "144", "-png"])
+            .arg(input)
+            .arg(&prefix),
+        Duration::from_secs(60),
+    )
+    .map_err(|e| {
+        if e.kind() == std::io::ErrorKind::NotFound {
+            "ocr_dependencies_unavailable"
+        } else {
+            "ocr_failed"
+        }
+    })?;
     if !result.status.success() {
         return Err("ocr_failed");
     }
@@ -327,11 +473,13 @@ fn ocr_pdf(bytes: &[u8]) -> Result<String, &'static str> {
     files.sort();
     let mut chunks = vec![];
     for file in files {
-        let output = Command::new("tesseract")
-            .arg(file)
-            .args(["stdout", "-l", "ces+eng"])
-            .output()
-            .map_err(|_| "ocr_failed")?;
+        let output = command_output(
+            Command::new("tesseract")
+                .arg(file)
+                .args(["stdout", "-l", "ces+eng"]),
+            Duration::from_secs(30),
+        )
+        .map_err(|_| "ocr_failed")?;
         if !output.status.success() {
             return Err("ocr_failed");
         }

@@ -117,11 +117,38 @@ pub async fn scrape_range(
     Ok(count)
 }
 fn read_rows(path: &Path) -> Result<Vec<csv::StringRecord>, Error> {
-    let mut r = csv::ReaderBuilder::new()
+    let raw = fs::read(path)?;
+    // Python opens input CSVs with universal newline translation, including
+    // carriage returns inside quoted fields.
+    let mut bytes = Vec::with_capacity(raw.len());
+    let mut index = 0;
+    while index < raw.len() {
+        if raw[index] == b'\r' {
+            bytes.push(b'\n');
+            index += if raw.get(index + 1) == Some(&b'\n') {
+                2
+            } else {
+                1
+            };
+        } else {
+            bytes.push(raw[index]);
+            index += 1;
+        }
+    }
+    let mut rows = vec![];
+    let mut prefix = bytes.as_slice();
+    // The CSV crate skips blank lines; Python consumes a blank first header.
+    while prefix.starts_with(b"\r") || prefix.starts_with(b"\n") {
+        let skip = if prefix.starts_with(b"\r\n") { 2 } else { 1 };
+        rows.push(csv::StringRecord::new());
+        prefix = &prefix[skip..];
+    }
+    let mut reader = csv::ReaderBuilder::new()
         .has_headers(false)
         .flexible(true)
-        .from_path(path)?;
-    Ok(r.records().collect::<Result<Vec<_>, _>>()?)
+        .from_reader(bytes.as_slice());
+    rows.extend(reader.records().collect::<Result<Vec<_>, _>>()?);
+    Ok(rows)
 }
 pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
     let processed: HashSet<String> = if output.exists() {
@@ -136,7 +163,10 @@ pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
     let icos: Vec<_> = read_rows(input)?
         .into_iter()
         .skip(1)
-        .filter_map(|r| r.get(0).map(|s| s.trim().to_owned()))
+        .filter_map(|r| {
+            r.get(0)
+                .map(|s| s.trim_matches(crate::parsers::python_whitespace).to_owned())
+        })
         .filter(|i| !processed.contains(i))
         .collect();
     println!(
@@ -233,7 +263,7 @@ pub async fn download(input: &Path, dir: &Path, origin: &str) -> Result<(), Erro
         return Ok(());
     }
     let rows = read_rows(input)?;
-    if rows.is_empty() {
+    if rows.first().is_none_or(|row| row.is_empty()) {
         return Ok(());
     }
     let rows = rows
@@ -404,7 +434,7 @@ async fn download_one(
         return Ok(());
     }
     let bytes = r.bytes().await?;
-    match extract_pdf_text(&bytes, None) {
+    match tokio::task::spawn_blocking(move || extract_pdf_text(&bytes, None)).await? {
         Ok(text) => {
             #[cfg(windows)]
             let text = text.replace('\n', "\r\n");

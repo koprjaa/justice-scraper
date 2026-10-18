@@ -3,7 +3,7 @@
 // Description: Registry navigation and attachment selection.
 // Author: Jan Alexandr Kopřiva
 // License: MIT
-use crate::parsers::{extract_year, normalize_text};
+use crate::parsers::{decimal_ascii, extract_year, normalize_text};
 use regex::Regex;
 use scraper::{ElementRef, Html, Selector};
 pub const ORIGIN: &str = "https://or.justice.cz";
@@ -87,11 +87,38 @@ pub fn parse_document_candidates(html: &str, origin: &str) -> Vec<Candidate> {
             }
         }
     }
-    out.sort_by_key(|c| {
-        std::cmp::Reverse((
-            c.year.unwrap_or(0),
-            c.dokument_id.parse::<i128>().unwrap_or(0),
-        ))
+    fn integer_key(id: &str) -> (bool, String) {
+        let id = id.trim_matches(crate::parsers::python_whitespace);
+        let (negative, digits) = if let Some(s) = id.strip_prefix('-') {
+            (true, s)
+        } else {
+            (false, id.strip_prefix('+').unwrap_or(id))
+        };
+        let groups: Vec<_> = digits.split('_').collect();
+        let number = if groups.iter().any(|s| s.is_empty()) {
+            None
+        } else {
+            decimal_ascii(&groups.concat())
+        };
+        let number = number.unwrap_or_else(|| "0".into());
+        let number = number.trim_start_matches('0');
+        (negative && !number.is_empty(), number.into())
+    }
+    out.sort_by(|a, b| {
+        let (an, ad) = integer_key(&a.dokument_id);
+        let (bn, bd) = integer_key(&b.dokument_id);
+        let integers = bn.cmp(&an).then_with(|| {
+            let order = ad.len().cmp(&bd.len()).then_with(|| ad.cmp(&bd));
+            if an {
+                order.reverse()
+            } else {
+                order
+            }
+        });
+        b.year
+            .unwrap_or(0)
+            .cmp(&a.year.unwrap_or(0))
+            .then(integers.reverse())
     });
     out.truncate(1);
     out

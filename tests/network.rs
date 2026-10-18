@@ -351,3 +351,51 @@ async fn navigation_timeout_is_enforced_and_retried() {
     .await;
     assert!(result.unwrap().is_none());
 }
+#[tokio::test]
+async fn declared_legacy_charset_matches_python() {
+    let s = MockServer::start().await;
+    Mock::given(path("/latin"))
+        .respond_with(
+            ResponseTemplate::new(200)
+                .insert_header("Content-Type", "text/plain; charset=windows-1250")
+                .set_body_bytes(vec![b'T', b'r', 0x9e, b'b', b'y']),
+        )
+        .expect(1)
+        .mount(&s)
+        .await;
+    let c = JusticeHttpClient::new(&s.uri()).unwrap();
+    assert_eq!(
+        c.text(&format!("{}/latin", s.uri()), "1", "step3_xml_1", None)
+            .await
+            .as_deref(),
+        Some("Tržby")
+    );
+}
+#[tokio::test]
+async fn malformed_utf8_is_replaced_and_http_bom_is_removed() {
+    let s = MockServer::start().await;
+    for (p, bytes) in [("/bad", vec![0xff]), ("/bom", vec![0xef, 0xbb, 0xbf, b'x'])] {
+        Mock::given(path(p))
+            .respond_with(
+                ResponseTemplate::new(200)
+                    .insert_header("Content-Type", "text/plain; charset=utf-8")
+                    .set_body_bytes(bytes),
+            )
+            .expect(1)
+            .mount(&s)
+            .await;
+    }
+    let c = JusticeHttpClient::new(&s.uri()).unwrap();
+    assert_eq!(
+        c.text(&format!("{}/bad", s.uri()), "1", "step3_xml_1", None)
+            .await
+            .as_deref(),
+        Some("\u{fffd}")
+    );
+    assert_eq!(
+        c.text(&format!("{}/bom", s.uri()), "1", "step3_xml_1", None)
+            .await
+            .as_deref(),
+        Some("x")
+    );
+}

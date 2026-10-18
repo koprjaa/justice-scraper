@@ -1,0 +1,4647 @@
+[
+  {
+    "kind": "normalize",
+    "input": "",
+    "expected": ""
+  },
+  {
+    "kind": "normalize",
+    "input": "Tržby",
+    "expected": "trzby"
+  },
+  {
+    "kind": "normalize",
+    "input": "aःb",
+    "expected": "aःb"
+  },
+  {
+    "kind": "normalize",
+    "input": "a⃝b",
+    "expected": "a⃝b"
+  },
+  {
+    "kind": "normalize",
+    "input": "İΣΟΣ",
+    "expected": "iσος"
+  },
+  {
+    "kind": "normalize",
+    "input": "\u001c100\u001f",
+    "expected": "\u001c100\u001f"
+  },
+  {
+    "kind": "year",
+    "input": "20２３",
+    "expected": 2023
+  },
+  {
+    "kind": "year",
+    "input": "[20２３] 2022",
+    "expected": 2023
+  },
+  {
+    "kind": "year",
+    "input": "2023́",
+    "expected": 2023
+  },
+  {
+    "kind": "year",
+    "input": "[2099] 2023",
+    "expected": null
+  },
+  {
+    "kind": "year",
+    "input": "[2023] 2025",
+    "expected": 2023
+  },
+  {
+    "kind": "number",
+    "input": "\u001c100\u001f",
+    "expected": 100.0
+  },
+  {
+    "kind": "number",
+    "input": "1.234.567",
+    "expected": 1234.567
+  },
+  {
+    "kind": "number",
+    "input": "1,234,567",
+    "expected": null
+  },
+  {
+    "kind": "number",
+    "input": "(500) Kč",
+    "expected": -500.0
+  },
+  {
+    "kind": "number",
+    "input": "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+    "expected": "infinity"
+  },
+  {
+    "kind": "number",
+    "input": "12\t34",
+    "expected": null
+  },
+  {
+    "kind": "number",
+    "input": "١٢٣",
+    "expected": null
+  },
+  {
+    "kind": "number",
+    "input": "(-500)",
+    "expected": 500.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n15000000\nAktiva\n42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r15000000\rAktiva\r42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r\n15000000\r\nAktiva\r\n42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\u000b15000000\u000bAktiva\u000b42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f15000000\fAktiva\f42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\u001c15000000\u001cAktiva\u001c42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\u001d15000000\u001dAktiva\u001d42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\u001e15000000\u001eAktiva\u001e42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby15000000Aktiva42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 15000000 Aktiva 42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 15000000 Aktiva 42000000",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": 42000000.0,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby><!--comment-->100</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 100.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby>12<!--comment-->34</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 1234.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby><![CDATA[12]]><![CDATA[34]]></Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 1234.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "﻿<a><Trzby>100</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 100.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<!DOCTYPE a [<!ENTITY amount \"1000\">]><a><Trzby>&amount;</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 1000.0,
+      "totalAssets": null,
+      "netProfit": null
+    },
+    "rustExpected": null,
+    "difference": "Custom XML entities are rejected to prevent entity expansion."
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby>100</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 100.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xhtml",
+    "input": "<p>Tržby</p><p>15000000</p><script>Aktiva 9</script>",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": [
+        "parsed_from_xhtml"
+      ]
+    }
+  },
+  {
+    "kind": "xhtml",
+    "input": "<template>Tržby 1000</template>",
+    "expected": {
+      "year": null,
+      "revenue": null,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "none",
+      "sourceNotes": [
+        "xhtml_empty_content"
+      ]
+    }
+  },
+  {
+    "kind": "xhtml",
+    "input": "<table><tr><td>Tržby</td><td>15000000</td></tr></table>",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": [
+        "parsed_from_xhtml"
+      ]
+    }
+  },
+  {
+    "kind": "xhtml",
+    "input": "<p>Tržby\r15000000</p>",
+    "expected": {
+      "year": null,
+      "revenue": 15000000.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": [
+        "parsed_from_xhtml"
+      ]
+    }
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=1\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=99999999999999999999999999999999999999999999999999\">detail</a></td></tr></table>",
+    "expected": "99999999999999999999999999999999999999999999999999"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=99999999999999999999999999999999999999999999999999\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=88888888888888888888888888888888888888888888888888\">detail</a></td></tr></table>",
+    "expected": "99999999999999999999999999999999999999999999999999"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-1\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=0\">detail</a></td></tr></table>",
+    "expected": "0"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=١٢\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=9\">detail</a></td></tr></table>",
+    "expected": "١٢"
+  },
+  {
+    "kind": "number",
+    "input": "-586901892",
+    "expected": -586901892.0
+  },
+  {
+    "kind": "number",
+    "input": "-586901892 Kč",
+    "expected": -586901892.0
+  },
+  {
+    "kind": "number",
+    "input": "-586901892 CZK",
+    "expected": -586901892.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -586901892",
+    "expected": {
+      "year": null,
+      "revenue": -586901892.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-788076290",
+    "expected": -788076290.0
+  },
+  {
+    "kind": "number",
+    "input": "-788076290 Kč",
+    "expected": -788076290.0
+  },
+  {
+    "kind": "number",
+    "input": "-788076290 CZK",
+    "expected": -788076290.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -788076290",
+    "expected": {
+      "year": null,
+      "revenue": -788076290.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "303016644",
+    "expected": 303016644.0
+  },
+  {
+    "kind": "number",
+    "input": "303016644 Kč",
+    "expected": 303016644.0
+  },
+  {
+    "kind": "number",
+    "input": "303016644 CZK",
+    "expected": 303016644.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n303016644",
+    "expected": {
+      "year": null,
+      "revenue": 303016644.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-636345136",
+    "expected": -636345136.0
+  },
+  {
+    "kind": "number",
+    "input": "-636345136 Kč",
+    "expected": -636345136.0
+  },
+  {
+    "kind": "number",
+    "input": "-636345136 CZK",
+    "expected": -636345136.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-636345136",
+    "expected": {
+      "year": null,
+      "revenue": -636345136.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-558835403",
+    "expected": -558835403.0
+  },
+  {
+    "kind": "number",
+    "input": "-558835403 Kč",
+    "expected": -558835403.0
+  },
+  {
+    "kind": "number",
+    "input": "-558835403 CZK",
+    "expected": -558835403.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-558835403",
+    "expected": {
+      "year": null,
+      "revenue": -558835403.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-601264040",
+    "expected": -601264040.0
+  },
+  {
+    "kind": "number",
+    "input": "-601264040 Kč",
+    "expected": -601264040.0
+  },
+  {
+    "kind": "number",
+    "input": "-601264040 CZK",
+    "expected": -601264040.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-601264040",
+    "expected": {
+      "year": null,
+      "revenue": -601264040.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "83434763",
+    "expected": 83434763.0
+  },
+  {
+    "kind": "number",
+    "input": "83434763 Kč",
+    "expected": 83434763.0
+  },
+  {
+    "kind": "number",
+    "input": "83434763 CZK",
+    "expected": 83434763.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 83434763",
+    "expected": {
+      "year": null,
+      "revenue": 83434763.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-279376794",
+    "expected": -279376794.0
+  },
+  {
+    "kind": "number",
+    "input": "-279376794 Kč",
+    "expected": -279376794.0
+  },
+  {
+    "kind": "number",
+    "input": "-279376794 CZK",
+    "expected": -279376794.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f-279376794",
+    "expected": {
+      "year": null,
+      "revenue": -279376794.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-287854868",
+    "expected": -287854868.0
+  },
+  {
+    "kind": "number",
+    "input": "-287854868 Kč",
+    "expected": -287854868.0
+  },
+  {
+    "kind": "number",
+    "input": "-287854868 CZK",
+    "expected": -287854868.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -287854868",
+    "expected": {
+      "year": null,
+      "revenue": -287854868.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-558840995",
+    "expected": -558840995.0
+  },
+  {
+    "kind": "number",
+    "input": "-558840995 Kč",
+    "expected": -558840995.0
+  },
+  {
+    "kind": "number",
+    "input": "-558840995 CZK",
+    "expected": -558840995.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-558840995",
+    "expected": {
+      "year": null,
+      "revenue": -558840995.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-389707845",
+    "expected": -389707845.0
+  },
+  {
+    "kind": "number",
+    "input": "-389707845 Kč",
+    "expected": -389707845.0
+  },
+  {
+    "kind": "number",
+    "input": "-389707845 CZK",
+    "expected": -389707845.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-389707845",
+    "expected": {
+      "year": null,
+      "revenue": -389707845.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "583214301",
+    "expected": 583214301.0
+  },
+  {
+    "kind": "number",
+    "input": "583214301 Kč",
+    "expected": 583214301.0
+  },
+  {
+    "kind": "number",
+    "input": "583214301 CZK",
+    "expected": 583214301.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 583214301",
+    "expected": {
+      "year": null,
+      "revenue": 583214301.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-941736926",
+    "expected": -941736926.0
+  },
+  {
+    "kind": "number",
+    "input": "-941736926 Kč",
+    "expected": -941736926.0
+  },
+  {
+    "kind": "number",
+    "input": "-941736926 CZK",
+    "expected": -941736926.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-941736926",
+    "expected": {
+      "year": null,
+      "revenue": -941736926.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "466866353",
+    "expected": 466866353.0
+  },
+  {
+    "kind": "number",
+    "input": "466866353 Kč",
+    "expected": 466866353.0
+  },
+  {
+    "kind": "number",
+    "input": "466866353 CZK",
+    "expected": 466866353.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r466866353",
+    "expected": {
+      "year": null,
+      "revenue": 466866353.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-381451743",
+    "expected": -381451743.0
+  },
+  {
+    "kind": "number",
+    "input": "-381451743 Kč",
+    "expected": -381451743.0
+  },
+  {
+    "kind": "number",
+    "input": "-381451743 CZK",
+    "expected": -381451743.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-381451743",
+    "expected": {
+      "year": null,
+      "revenue": -381451743.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "227641417",
+    "expected": 227641417.0
+  },
+  {
+    "kind": "number",
+    "input": "227641417 Kč",
+    "expected": 227641417.0
+  },
+  {
+    "kind": "number",
+    "input": "227641417 CZK",
+    "expected": 227641417.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r227641417",
+    "expected": {
+      "year": null,
+      "revenue": 227641417.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-695353395",
+    "expected": -695353395.0
+  },
+  {
+    "kind": "number",
+    "input": "-695353395 Kč",
+    "expected": -695353395.0
+  },
+  {
+    "kind": "number",
+    "input": "-695353395 CZK",
+    "expected": -695353395.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-695353395",
+    "expected": {
+      "year": null,
+      "revenue": -695353395.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "572184091",
+    "expected": 572184091.0
+  },
+  {
+    "kind": "number",
+    "input": "572184091 Kč",
+    "expected": 572184091.0
+  },
+  {
+    "kind": "number",
+    "input": "572184091 CZK",
+    "expected": 572184091.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n572184091",
+    "expected": {
+      "year": null,
+      "revenue": 572184091.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "829838318",
+    "expected": 829838318.0
+  },
+  {
+    "kind": "number",
+    "input": "829838318 Kč",
+    "expected": 829838318.0
+  },
+  {
+    "kind": "number",
+    "input": "829838318 CZK",
+    "expected": 829838318.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f829838318",
+    "expected": {
+      "year": null,
+      "revenue": 829838318.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-916516607",
+    "expected": -916516607.0
+  },
+  {
+    "kind": "number",
+    "input": "-916516607 Kč",
+    "expected": -916516607.0
+  },
+  {
+    "kind": "number",
+    "input": "-916516607 CZK",
+    "expected": -916516607.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f-916516607",
+    "expected": {
+      "year": null,
+      "revenue": -916516607.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-342668667",
+    "expected": -342668667.0
+  },
+  {
+    "kind": "number",
+    "input": "-342668667 Kč",
+    "expected": -342668667.0
+  },
+  {
+    "kind": "number",
+    "input": "-342668667 CZK",
+    "expected": -342668667.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-342668667",
+    "expected": {
+      "year": null,
+      "revenue": -342668667.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "247886506",
+    "expected": 247886506.0
+  },
+  {
+    "kind": "number",
+    "input": "247886506 Kč",
+    "expected": 247886506.0
+  },
+  {
+    "kind": "number",
+    "input": "247886506 CZK",
+    "expected": 247886506.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r247886506",
+    "expected": {
+      "year": null,
+      "revenue": 247886506.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "106462042",
+    "expected": 106462042.0
+  },
+  {
+    "kind": "number",
+    "input": "106462042 Kč",
+    "expected": 106462042.0
+  },
+  {
+    "kind": "number",
+    "input": "106462042 CZK",
+    "expected": 106462042.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n106462042",
+    "expected": {
+      "year": null,
+      "revenue": 106462042.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-257156374",
+    "expected": -257156374.0
+  },
+  {
+    "kind": "number",
+    "input": "-257156374 Kč",
+    "expected": -257156374.0
+  },
+  {
+    "kind": "number",
+    "input": "-257156374 CZK",
+    "expected": -257156374.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f-257156374",
+    "expected": {
+      "year": null,
+      "revenue": -257156374.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-611270836",
+    "expected": -611270836.0
+  },
+  {
+    "kind": "number",
+    "input": "-611270836 Kč",
+    "expected": -611270836.0
+  },
+  {
+    "kind": "number",
+    "input": "-611270836 CZK",
+    "expected": -611270836.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -611270836",
+    "expected": {
+      "year": null,
+      "revenue": -611270836.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "973655245",
+    "expected": 973655245.0
+  },
+  {
+    "kind": "number",
+    "input": "973655245 Kč",
+    "expected": 973655245.0
+  },
+  {
+    "kind": "number",
+    "input": "973655245 CZK",
+    "expected": 973655245.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r973655245",
+    "expected": {
+      "year": null,
+      "revenue": 973655245.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-420854949",
+    "expected": -420854949.0
+  },
+  {
+    "kind": "number",
+    "input": "-420854949 Kč",
+    "expected": -420854949.0
+  },
+  {
+    "kind": "number",
+    "input": "-420854949 CZK",
+    "expected": -420854949.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-420854949",
+    "expected": {
+      "year": null,
+      "revenue": -420854949.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "355790861",
+    "expected": 355790861.0
+  },
+  {
+    "kind": "number",
+    "input": "355790861 Kč",
+    "expected": 355790861.0
+  },
+  {
+    "kind": "number",
+    "input": "355790861 CZK",
+    "expected": 355790861.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r355790861",
+    "expected": {
+      "year": null,
+      "revenue": 355790861.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "846450807",
+    "expected": 846450807.0
+  },
+  {
+    "kind": "number",
+    "input": "846450807 Kč",
+    "expected": 846450807.0
+  },
+  {
+    "kind": "number",
+    "input": "846450807 CZK",
+    "expected": 846450807.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 846450807",
+    "expected": {
+      "year": null,
+      "revenue": 846450807.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-114296374",
+    "expected": -114296374.0
+  },
+  {
+    "kind": "number",
+    "input": "-114296374 Kč",
+    "expected": -114296374.0
+  },
+  {
+    "kind": "number",
+    "input": "-114296374 CZK",
+    "expected": -114296374.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -114296374",
+    "expected": {
+      "year": null,
+      "revenue": -114296374.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "870636807",
+    "expected": 870636807.0
+  },
+  {
+    "kind": "number",
+    "input": "870636807 Kč",
+    "expected": 870636807.0
+  },
+  {
+    "kind": "number",
+    "input": "870636807 CZK",
+    "expected": 870636807.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f870636807",
+    "expected": {
+      "year": null,
+      "revenue": 870636807.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-725158060",
+    "expected": -725158060.0
+  },
+  {
+    "kind": "number",
+    "input": "-725158060 Kč",
+    "expected": -725158060.0
+  },
+  {
+    "kind": "number",
+    "input": "-725158060 CZK",
+    "expected": -725158060.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-725158060",
+    "expected": {
+      "year": null,
+      "revenue": -725158060.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-887890704",
+    "expected": -887890704.0
+  },
+  {
+    "kind": "number",
+    "input": "-887890704 Kč",
+    "expected": -887890704.0
+  },
+  {
+    "kind": "number",
+    "input": "-887890704 CZK",
+    "expected": -887890704.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f-887890704",
+    "expected": {
+      "year": null,
+      "revenue": -887890704.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "661337763",
+    "expected": 661337763.0
+  },
+  {
+    "kind": "number",
+    "input": "661337763 Kč",
+    "expected": 661337763.0
+  },
+  {
+    "kind": "number",
+    "input": "661337763 CZK",
+    "expected": 661337763.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r661337763",
+    "expected": {
+      "year": null,
+      "revenue": 661337763.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "466114583",
+    "expected": 466114583.0
+  },
+  {
+    "kind": "number",
+    "input": "466114583 Kč",
+    "expected": 466114583.0
+  },
+  {
+    "kind": "number",
+    "input": "466114583 CZK",
+    "expected": 466114583.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r466114583",
+    "expected": {
+      "year": null,
+      "revenue": 466114583.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "808501889",
+    "expected": 808501889.0
+  },
+  {
+    "kind": "number",
+    "input": "808501889 Kč",
+    "expected": 808501889.0
+  },
+  {
+    "kind": "number",
+    "input": "808501889 CZK",
+    "expected": 808501889.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r808501889",
+    "expected": {
+      "year": null,
+      "revenue": 808501889.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "776648705",
+    "expected": 776648705.0
+  },
+  {
+    "kind": "number",
+    "input": "776648705 Kč",
+    "expected": 776648705.0
+  },
+  {
+    "kind": "number",
+    "input": "776648705 CZK",
+    "expected": 776648705.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n776648705",
+    "expected": {
+      "year": null,
+      "revenue": 776648705.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-666820589",
+    "expected": -666820589.0
+  },
+  {
+    "kind": "number",
+    "input": "-666820589 Kč",
+    "expected": -666820589.0
+  },
+  {
+    "kind": "number",
+    "input": "-666820589 CZK",
+    "expected": -666820589.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -666820589",
+    "expected": {
+      "year": null,
+      "revenue": -666820589.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-975326609",
+    "expected": -975326609.0
+  },
+  {
+    "kind": "number",
+    "input": "-975326609 Kč",
+    "expected": -975326609.0
+  },
+  {
+    "kind": "number",
+    "input": "-975326609 CZK",
+    "expected": -975326609.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -975326609",
+    "expected": {
+      "year": null,
+      "revenue": -975326609.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "9944138",
+    "expected": 9944138.0
+  },
+  {
+    "kind": "number",
+    "input": "9944138 Kč",
+    "expected": 9944138.0
+  },
+  {
+    "kind": "number",
+    "input": "9944138 CZK",
+    "expected": 9944138.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r9944138",
+    "expected": {
+      "year": null,
+      "revenue": 9944138.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-190019093",
+    "expected": -190019093.0
+  },
+  {
+    "kind": "number",
+    "input": "-190019093 Kč",
+    "expected": -190019093.0
+  },
+  {
+    "kind": "number",
+    "input": "-190019093 CZK",
+    "expected": -190019093.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-190019093",
+    "expected": {
+      "year": null,
+      "revenue": -190019093.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-603105167",
+    "expected": -603105167.0
+  },
+  {
+    "kind": "number",
+    "input": "-603105167 Kč",
+    "expected": -603105167.0
+  },
+  {
+    "kind": "number",
+    "input": "-603105167 CZK",
+    "expected": -603105167.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f-603105167",
+    "expected": {
+      "year": null,
+      "revenue": -603105167.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-359152472",
+    "expected": -359152472.0
+  },
+  {
+    "kind": "number",
+    "input": "-359152472 Kč",
+    "expected": -359152472.0
+  },
+  {
+    "kind": "number",
+    "input": "-359152472 CZK",
+    "expected": -359152472.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -359152472",
+    "expected": {
+      "year": null,
+      "revenue": -359152472.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "620004131",
+    "expected": 620004131.0
+  },
+  {
+    "kind": "number",
+    "input": "620004131 Kč",
+    "expected": 620004131.0
+  },
+  {
+    "kind": "number",
+    "input": "620004131 CZK",
+    "expected": 620004131.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r620004131",
+    "expected": {
+      "year": null,
+      "revenue": 620004131.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "313930576",
+    "expected": 313930576.0
+  },
+  {
+    "kind": "number",
+    "input": "313930576 Kč",
+    "expected": 313930576.0
+  },
+  {
+    "kind": "number",
+    "input": "313930576 CZK",
+    "expected": 313930576.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony 313930576",
+    "expected": {
+      "year": null,
+      "revenue": 313930576.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-181995461",
+    "expected": -181995461.0
+  },
+  {
+    "kind": "number",
+    "input": "-181995461 Kč",
+    "expected": -181995461.0
+  },
+  {
+    "kind": "number",
+    "input": "-181995461 CZK",
+    "expected": -181995461.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -181995461",
+    "expected": {
+      "year": null,
+      "revenue": -181995461.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "305611465",
+    "expected": 305611465.0
+  },
+  {
+    "kind": "number",
+    "input": "305611465 Kč",
+    "expected": 305611465.0
+  },
+  {
+    "kind": "number",
+    "input": "305611465 CZK",
+    "expected": 305611465.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n305611465",
+    "expected": {
+      "year": null,
+      "revenue": 305611465.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-313057902",
+    "expected": -313057902.0
+  },
+  {
+    "kind": "number",
+    "input": "-313057902 Kč",
+    "expected": -313057902.0
+  },
+  {
+    "kind": "number",
+    "input": "-313057902 CZK",
+    "expected": -313057902.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-313057902",
+    "expected": {
+      "year": null,
+      "revenue": -313057902.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-372694506",
+    "expected": -372694506.0
+  },
+  {
+    "kind": "number",
+    "input": "-372694506 Kč",
+    "expected": -372694506.0
+  },
+  {
+    "kind": "number",
+    "input": "-372694506 CZK",
+    "expected": -372694506.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -372694506",
+    "expected": {
+      "year": null,
+      "revenue": -372694506.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "346027407",
+    "expected": 346027407.0
+  },
+  {
+    "kind": "number",
+    "input": "346027407 Kč",
+    "expected": 346027407.0
+  },
+  {
+    "kind": "number",
+    "input": "346027407 CZK",
+    "expected": 346027407.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n346027407",
+    "expected": {
+      "year": null,
+      "revenue": 346027407.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-858867019",
+    "expected": -858867019.0
+  },
+  {
+    "kind": "number",
+    "input": "-858867019 Kč",
+    "expected": -858867019.0
+  },
+  {
+    "kind": "number",
+    "input": "-858867019 CZK",
+    "expected": -858867019.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -858867019",
+    "expected": {
+      "year": null,
+      "revenue": -858867019.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "668846201",
+    "expected": 668846201.0
+  },
+  {
+    "kind": "number",
+    "input": "668846201 Kč",
+    "expected": 668846201.0
+  },
+  {
+    "kind": "number",
+    "input": "668846201 CZK",
+    "expected": 668846201.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 668846201",
+    "expected": {
+      "year": null,
+      "revenue": 668846201.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "361114997",
+    "expected": 361114997.0
+  },
+  {
+    "kind": "number",
+    "input": "361114997 Kč",
+    "expected": 361114997.0
+  },
+  {
+    "kind": "number",
+    "input": "361114997 CZK",
+    "expected": 361114997.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f361114997",
+    "expected": {
+      "year": null,
+      "revenue": 361114997.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "906256244",
+    "expected": 906256244.0
+  },
+  {
+    "kind": "number",
+    "input": "906256244 Kč",
+    "expected": 906256244.0
+  },
+  {
+    "kind": "number",
+    "input": "906256244 CZK",
+    "expected": 906256244.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f906256244",
+    "expected": {
+      "year": null,
+      "revenue": 906256244.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-132155732",
+    "expected": -132155732.0
+  },
+  {
+    "kind": "number",
+    "input": "-132155732 Kč",
+    "expected": -132155732.0
+  },
+  {
+    "kind": "number",
+    "input": "-132155732 CZK",
+    "expected": -132155732.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f-132155732",
+    "expected": {
+      "year": null,
+      "revenue": -132155732.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "239471752",
+    "expected": 239471752.0
+  },
+  {
+    "kind": "number",
+    "input": "239471752 Kč",
+    "expected": 239471752.0
+  },
+  {
+    "kind": "number",
+    "input": "239471752 CZK",
+    "expected": 239471752.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f239471752",
+    "expected": {
+      "year": null,
+      "revenue": 239471752.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-144274583",
+    "expected": -144274583.0
+  },
+  {
+    "kind": "number",
+    "input": "-144274583 Kč",
+    "expected": -144274583.0
+  },
+  {
+    "kind": "number",
+    "input": "-144274583 CZK",
+    "expected": -144274583.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-144274583",
+    "expected": {
+      "year": null,
+      "revenue": -144274583.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-481211285",
+    "expected": -481211285.0
+  },
+  {
+    "kind": "number",
+    "input": "-481211285 Kč",
+    "expected": -481211285.0
+  },
+  {
+    "kind": "number",
+    "input": "-481211285 CZK",
+    "expected": -481211285.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f-481211285",
+    "expected": {
+      "year": null,
+      "revenue": -481211285.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-107740629",
+    "expected": -107740629.0
+  },
+  {
+    "kind": "number",
+    "input": "-107740629 Kč",
+    "expected": -107740629.0
+  },
+  {
+    "kind": "number",
+    "input": "-107740629 CZK",
+    "expected": -107740629.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-107740629",
+    "expected": {
+      "year": null,
+      "revenue": -107740629.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "600938471",
+    "expected": 600938471.0
+  },
+  {
+    "kind": "number",
+    "input": "600938471 Kč",
+    "expected": 600938471.0
+  },
+  {
+    "kind": "number",
+    "input": "600938471 CZK",
+    "expected": 600938471.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 600938471",
+    "expected": {
+      "year": null,
+      "revenue": 600938471.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "717332505",
+    "expected": 717332505.0
+  },
+  {
+    "kind": "number",
+    "input": "717332505 Kč",
+    "expected": 717332505.0
+  },
+  {
+    "kind": "number",
+    "input": "717332505 CZK",
+    "expected": 717332505.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f717332505",
+    "expected": {
+      "year": null,
+      "revenue": 717332505.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-111452170",
+    "expected": -111452170.0
+  },
+  {
+    "kind": "number",
+    "input": "-111452170 Kč",
+    "expected": -111452170.0
+  },
+  {
+    "kind": "number",
+    "input": "-111452170 CZK",
+    "expected": -111452170.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-111452170",
+    "expected": {
+      "year": null,
+      "revenue": -111452170.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-240490254",
+    "expected": -240490254.0
+  },
+  {
+    "kind": "number",
+    "input": "-240490254 Kč",
+    "expected": -240490254.0
+  },
+  {
+    "kind": "number",
+    "input": "-240490254 CZK",
+    "expected": -240490254.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-240490254",
+    "expected": {
+      "year": null,
+      "revenue": -240490254.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-285111741",
+    "expected": -285111741.0
+  },
+  {
+    "kind": "number",
+    "input": "-285111741 Kč",
+    "expected": -285111741.0
+  },
+  {
+    "kind": "number",
+    "input": "-285111741 CZK",
+    "expected": -285111741.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-285111741",
+    "expected": {
+      "year": null,
+      "revenue": -285111741.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "602720491",
+    "expected": 602720491.0
+  },
+  {
+    "kind": "number",
+    "input": "602720491 Kč",
+    "expected": 602720491.0
+  },
+  {
+    "kind": "number",
+    "input": "602720491 CZK",
+    "expected": 602720491.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f602720491",
+    "expected": {
+      "year": null,
+      "revenue": 602720491.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-155793989",
+    "expected": -155793989.0
+  },
+  {
+    "kind": "number",
+    "input": "-155793989 Kč",
+    "expected": -155793989.0
+  },
+  {
+    "kind": "number",
+    "input": "-155793989 CZK",
+    "expected": -155793989.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-155793989",
+    "expected": {
+      "year": null,
+      "revenue": -155793989.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-463906718",
+    "expected": -463906718.0
+  },
+  {
+    "kind": "number",
+    "input": "-463906718 Kč",
+    "expected": -463906718.0
+  },
+  {
+    "kind": "number",
+    "input": "-463906718 CZK",
+    "expected": -463906718.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -463906718",
+    "expected": {
+      "year": null,
+      "revenue": -463906718.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-103807904",
+    "expected": -103807904.0
+  },
+  {
+    "kind": "number",
+    "input": "-103807904 Kč",
+    "expected": -103807904.0
+  },
+  {
+    "kind": "number",
+    "input": "-103807904 CZK",
+    "expected": -103807904.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -103807904",
+    "expected": {
+      "year": null,
+      "revenue": -103807904.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-534970677",
+    "expected": -534970677.0
+  },
+  {
+    "kind": "number",
+    "input": "-534970677 Kč",
+    "expected": -534970677.0
+  },
+  {
+    "kind": "number",
+    "input": "-534970677 CZK",
+    "expected": -534970677.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-534970677",
+    "expected": {
+      "year": null,
+      "revenue": -534970677.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-395816287",
+    "expected": -395816287.0
+  },
+  {
+    "kind": "number",
+    "input": "-395816287 Kč",
+    "expected": -395816287.0
+  },
+  {
+    "kind": "number",
+    "input": "-395816287 CZK",
+    "expected": -395816287.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -395816287",
+    "expected": {
+      "year": null,
+      "revenue": -395816287.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-854205915",
+    "expected": -854205915.0
+  },
+  {
+    "kind": "number",
+    "input": "-854205915 Kč",
+    "expected": -854205915.0
+  },
+  {
+    "kind": "number",
+    "input": "-854205915 CZK",
+    "expected": -854205915.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-854205915",
+    "expected": {
+      "year": null,
+      "revenue": -854205915.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "408103507",
+    "expected": 408103507.0
+  },
+  {
+    "kind": "number",
+    "input": "408103507 Kč",
+    "expected": 408103507.0
+  },
+  {
+    "kind": "number",
+    "input": "408103507 CZK",
+    "expected": 408103507.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r408103507",
+    "expected": {
+      "year": null,
+      "revenue": 408103507.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-144435294",
+    "expected": -144435294.0
+  },
+  {
+    "kind": "number",
+    "input": "-144435294 Kč",
+    "expected": -144435294.0
+  },
+  {
+    "kind": "number",
+    "input": "-144435294 CZK",
+    "expected": -144435294.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -144435294",
+    "expected": {
+      "year": null,
+      "revenue": -144435294.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-77434977",
+    "expected": -77434977.0
+  },
+  {
+    "kind": "number",
+    "input": "-77434977 Kč",
+    "expected": -77434977.0
+  },
+  {
+    "kind": "number",
+    "input": "-77434977 CZK",
+    "expected": -77434977.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-77434977",
+    "expected": {
+      "year": null,
+      "revenue": -77434977.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "503607444",
+    "expected": 503607444.0
+  },
+  {
+    "kind": "number",
+    "input": "503607444 Kč",
+    "expected": 503607444.0
+  },
+  {
+    "kind": "number",
+    "input": "503607444 CZK",
+    "expected": 503607444.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n503607444",
+    "expected": {
+      "year": null,
+      "revenue": 503607444.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-877726141",
+    "expected": -877726141.0
+  },
+  {
+    "kind": "number",
+    "input": "-877726141 Kč",
+    "expected": -877726141.0
+  },
+  {
+    "kind": "number",
+    "input": "-877726141 CZK",
+    "expected": -877726141.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -877726141",
+    "expected": {
+      "year": null,
+      "revenue": -877726141.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-655899212",
+    "expected": -655899212.0
+  },
+  {
+    "kind": "number",
+    "input": "-655899212 Kč",
+    "expected": -655899212.0
+  },
+  {
+    "kind": "number",
+    "input": "-655899212 CZK",
+    "expected": -655899212.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -655899212",
+    "expected": {
+      "year": null,
+      "revenue": -655899212.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "276603504",
+    "expected": 276603504.0
+  },
+  {
+    "kind": "number",
+    "input": "276603504 Kč",
+    "expected": 276603504.0
+  },
+  {
+    "kind": "number",
+    "input": "276603504 CZK",
+    "expected": 276603504.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f276603504",
+    "expected": {
+      "year": null,
+      "revenue": 276603504.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "818193961",
+    "expected": 818193961.0
+  },
+  {
+    "kind": "number",
+    "input": "818193961 Kč",
+    "expected": 818193961.0
+  },
+  {
+    "kind": "number",
+    "input": "818193961 CZK",
+    "expected": 818193961.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n818193961",
+    "expected": {
+      "year": null,
+      "revenue": 818193961.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-389314908",
+    "expected": -389314908.0
+  },
+  {
+    "kind": "number",
+    "input": "-389314908 Kč",
+    "expected": -389314908.0
+  },
+  {
+    "kind": "number",
+    "input": "-389314908 CZK",
+    "expected": -389314908.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -389314908",
+    "expected": {
+      "year": null,
+      "revenue": -389314908.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-935192459",
+    "expected": -935192459.0
+  },
+  {
+    "kind": "number",
+    "input": "-935192459 Kč",
+    "expected": -935192459.0
+  },
+  {
+    "kind": "number",
+    "input": "-935192459 CZK",
+    "expected": -935192459.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-935192459",
+    "expected": {
+      "year": null,
+      "revenue": -935192459.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-71883437",
+    "expected": -71883437.0
+  },
+  {
+    "kind": "number",
+    "input": "-71883437 Kč",
+    "expected": -71883437.0
+  },
+  {
+    "kind": "number",
+    "input": "-71883437 CZK",
+    "expected": -71883437.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f-71883437",
+    "expected": {
+      "year": null,
+      "revenue": -71883437.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "190431463",
+    "expected": 190431463.0
+  },
+  {
+    "kind": "number",
+    "input": "190431463 Kč",
+    "expected": 190431463.0
+  },
+  {
+    "kind": "number",
+    "input": "190431463 CZK",
+    "expected": 190431463.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f190431463",
+    "expected": {
+      "year": null,
+      "revenue": 190431463.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "379734212",
+    "expected": 379734212.0
+  },
+  {
+    "kind": "number",
+    "input": "379734212 Kč",
+    "expected": 379734212.0
+  },
+  {
+    "kind": "number",
+    "input": "379734212 CZK",
+    "expected": 379734212.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r379734212",
+    "expected": {
+      "year": null,
+      "revenue": 379734212.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-266732832",
+    "expected": -266732832.0
+  },
+  {
+    "kind": "number",
+    "input": "-266732832 Kč",
+    "expected": -266732832.0
+  },
+  {
+    "kind": "number",
+    "input": "-266732832 CZK",
+    "expected": -266732832.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-266732832",
+    "expected": {
+      "year": null,
+      "revenue": -266732832.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "771305690",
+    "expected": 771305690.0
+  },
+  {
+    "kind": "number",
+    "input": "771305690 Kč",
+    "expected": 771305690.0
+  },
+  {
+    "kind": "number",
+    "input": "771305690 CZK",
+    "expected": 771305690.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f771305690",
+    "expected": {
+      "year": null,
+      "revenue": 771305690.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "358005928",
+    "expected": 358005928.0
+  },
+  {
+    "kind": "number",
+    "input": "358005928 Kč",
+    "expected": 358005928.0
+  },
+  {
+    "kind": "number",
+    "input": "358005928 CZK",
+    "expected": 358005928.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n358005928",
+    "expected": {
+      "year": null,
+      "revenue": 358005928.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-467998872",
+    "expected": -467998872.0
+  },
+  {
+    "kind": "number",
+    "input": "-467998872 Kč",
+    "expected": -467998872.0
+  },
+  {
+    "kind": "number",
+    "input": "-467998872 CZK",
+    "expected": -467998872.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-467998872",
+    "expected": {
+      "year": null,
+      "revenue": -467998872.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-197020691",
+    "expected": -197020691.0
+  },
+  {
+    "kind": "number",
+    "input": "-197020691 Kč",
+    "expected": -197020691.0
+  },
+  {
+    "kind": "number",
+    "input": "-197020691 CZK",
+    "expected": -197020691.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-197020691",
+    "expected": {
+      "year": null,
+      "revenue": -197020691.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "905739025",
+    "expected": 905739025.0
+  },
+  {
+    "kind": "number",
+    "input": "905739025 Kč",
+    "expected": 905739025.0
+  },
+  {
+    "kind": "number",
+    "input": "905739025 CZK",
+    "expected": 905739025.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r905739025",
+    "expected": {
+      "year": null,
+      "revenue": 905739025.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-287183044",
+    "expected": -287183044.0
+  },
+  {
+    "kind": "number",
+    "input": "-287183044 Kč",
+    "expected": -287183044.0
+  },
+  {
+    "kind": "number",
+    "input": "-287183044 CZK",
+    "expected": -287183044.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-287183044",
+    "expected": {
+      "year": null,
+      "revenue": -287183044.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-727543058",
+    "expected": -727543058.0
+  },
+  {
+    "kind": "number",
+    "input": "-727543058 Kč",
+    "expected": -727543058.0
+  },
+  {
+    "kind": "number",
+    "input": "-727543058 CZK",
+    "expected": -727543058.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-727543058",
+    "expected": {
+      "year": null,
+      "revenue": -727543058.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-45941523",
+    "expected": -45941523.0
+  },
+  {
+    "kind": "number",
+    "input": "-45941523 Kč",
+    "expected": -45941523.0
+  },
+  {
+    "kind": "number",
+    "input": "-45941523 CZK",
+    "expected": -45941523.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-45941523",
+    "expected": {
+      "year": null,
+      "revenue": -45941523.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "51832940",
+    "expected": 51832940.0
+  },
+  {
+    "kind": "number",
+    "input": "51832940 Kč",
+    "expected": 51832940.0
+  },
+  {
+    "kind": "number",
+    "input": "51832940 CZK",
+    "expected": 51832940.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat 51832940",
+    "expected": {
+      "year": null,
+      "revenue": 51832940.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-57312885",
+    "expected": -57312885.0
+  },
+  {
+    "kind": "number",
+    "input": "-57312885 Kč",
+    "expected": -57312885.0
+  },
+  {
+    "kind": "number",
+    "input": "-57312885 CZK",
+    "expected": -57312885.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-57312885",
+    "expected": {
+      "year": null,
+      "revenue": -57312885.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-281556160",
+    "expected": -281556160.0
+  },
+  {
+    "kind": "number",
+    "input": "-281556160 Kč",
+    "expected": -281556160.0
+  },
+  {
+    "kind": "number",
+    "input": "-281556160 CZK",
+    "expected": -281556160.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-281556160",
+    "expected": {
+      "year": null,
+      "revenue": -281556160.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-38367274",
+    "expected": -38367274.0
+  },
+  {
+    "kind": "number",
+    "input": "-38367274 Kč",
+    "expected": -38367274.0
+  },
+  {
+    "kind": "number",
+    "input": "-38367274 CZK",
+    "expected": -38367274.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-38367274",
+    "expected": {
+      "year": null,
+      "revenue": -38367274.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-69503840",
+    "expected": -69503840.0
+  },
+  {
+    "kind": "number",
+    "input": "-69503840 Kč",
+    "expected": -69503840.0
+  },
+  {
+    "kind": "number",
+    "input": "-69503840 CZK",
+    "expected": -69503840.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-69503840",
+    "expected": {
+      "year": null,
+      "revenue": -69503840.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "40959639",
+    "expected": 40959639.0
+  },
+  {
+    "kind": "number",
+    "input": "40959639 Kč",
+    "expected": 40959639.0
+  },
+  {
+    "kind": "number",
+    "input": "40959639 CZK",
+    "expected": 40959639.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r40959639",
+    "expected": {
+      "year": null,
+      "revenue": 40959639.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "555579632",
+    "expected": 555579632.0
+  },
+  {
+    "kind": "number",
+    "input": "555579632 Kč",
+    "expected": 555579632.0
+  },
+  {
+    "kind": "number",
+    "input": "555579632 CZK",
+    "expected": 555579632.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f555579632",
+    "expected": {
+      "year": null,
+      "revenue": 555579632.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-41504961",
+    "expected": -41504961.0
+  },
+  {
+    "kind": "number",
+    "input": "-41504961 Kč",
+    "expected": -41504961.0
+  },
+  {
+    "kind": "number",
+    "input": "-41504961 CZK",
+    "expected": -41504961.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-41504961",
+    "expected": {
+      "year": null,
+      "revenue": -41504961.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "359663507",
+    "expected": 359663507.0
+  },
+  {
+    "kind": "number",
+    "input": "359663507 Kč",
+    "expected": 359663507.0
+  },
+  {
+    "kind": "number",
+    "input": "359663507 CZK",
+    "expected": 359663507.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r359663507",
+    "expected": {
+      "year": null,
+      "revenue": 359663507.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "368836867",
+    "expected": 368836867.0
+  },
+  {
+    "kind": "number",
+    "input": "368836867 Kč",
+    "expected": 368836867.0
+  },
+  {
+    "kind": "number",
+    "input": "368836867 CZK",
+    "expected": 368836867.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony 368836867",
+    "expected": {
+      "year": null,
+      "revenue": 368836867.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-916437069",
+    "expected": -916437069.0
+  },
+  {
+    "kind": "number",
+    "input": "-916437069 Kč",
+    "expected": -916437069.0
+  },
+  {
+    "kind": "number",
+    "input": "-916437069 CZK",
+    "expected": -916437069.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -916437069",
+    "expected": {
+      "year": null,
+      "revenue": -916437069.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-307541111",
+    "expected": -307541111.0
+  },
+  {
+    "kind": "number",
+    "input": "-307541111 Kč",
+    "expected": -307541111.0
+  },
+  {
+    "kind": "number",
+    "input": "-307541111 CZK",
+    "expected": -307541111.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-307541111",
+    "expected": {
+      "year": null,
+      "revenue": -307541111.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "683316975",
+    "expected": 683316975.0
+  },
+  {
+    "kind": "number",
+    "input": "683316975 Kč",
+    "expected": 683316975.0
+  },
+  {
+    "kind": "number",
+    "input": "683316975 CZK",
+    "expected": 683316975.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r683316975",
+    "expected": {
+      "year": null,
+      "revenue": 683316975.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-751016134",
+    "expected": -751016134.0
+  },
+  {
+    "kind": "number",
+    "input": "-751016134 Kč",
+    "expected": -751016134.0
+  },
+  {
+    "kind": "number",
+    "input": "-751016134 CZK",
+    "expected": -751016134.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-751016134",
+    "expected": {
+      "year": null,
+      "revenue": -751016134.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-357253502",
+    "expected": -357253502.0
+  },
+  {
+    "kind": "number",
+    "input": "-357253502 Kč",
+    "expected": -357253502.0
+  },
+  {
+    "kind": "number",
+    "input": "-357253502 CZK",
+    "expected": -357253502.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-357253502",
+    "expected": {
+      "year": null,
+      "revenue": -357253502.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-741013018",
+    "expected": -741013018.0
+  },
+  {
+    "kind": "number",
+    "input": "-741013018 Kč",
+    "expected": -741013018.0
+  },
+  {
+    "kind": "number",
+    "input": "-741013018 CZK",
+    "expected": -741013018.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-741013018",
+    "expected": {
+      "year": null,
+      "revenue": -741013018.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-936733847",
+    "expected": -936733847.0
+  },
+  {
+    "kind": "number",
+    "input": "-936733847 Kč",
+    "expected": -936733847.0
+  },
+  {
+    "kind": "number",
+    "input": "-936733847 CZK",
+    "expected": -936733847.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -936733847",
+    "expected": {
+      "year": null,
+      "revenue": -936733847.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-512713178",
+    "expected": -512713178.0
+  },
+  {
+    "kind": "number",
+    "input": "-512713178 Kč",
+    "expected": -512713178.0
+  },
+  {
+    "kind": "number",
+    "input": "-512713178 CZK",
+    "expected": -512713178.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-512713178",
+    "expected": {
+      "year": null,
+      "revenue": -512713178.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "474505094",
+    "expected": 474505094.0
+  },
+  {
+    "kind": "number",
+    "input": "474505094 Kč",
+    "expected": 474505094.0
+  },
+  {
+    "kind": "number",
+    "input": "474505094 CZK",
+    "expected": 474505094.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n474505094",
+    "expected": {
+      "year": null,
+      "revenue": 474505094.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "325343030",
+    "expected": 325343030.0
+  },
+  {
+    "kind": "number",
+    "input": "325343030 Kč",
+    "expected": 325343030.0
+  },
+  {
+    "kind": "number",
+    "input": "325343030 CZK",
+    "expected": 325343030.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat 325343030",
+    "expected": {
+      "year": null,
+      "revenue": 325343030.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "55849174",
+    "expected": 55849174.0
+  },
+  {
+    "kind": "number",
+    "input": "55849174 Kč",
+    "expected": 55849174.0
+  },
+  {
+    "kind": "number",
+    "input": "55849174 CZK",
+    "expected": 55849174.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r55849174",
+    "expected": {
+      "year": null,
+      "revenue": 55849174.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-443501669",
+    "expected": -443501669.0
+  },
+  {
+    "kind": "number",
+    "input": "-443501669 Kč",
+    "expected": -443501669.0
+  },
+  {
+    "kind": "number",
+    "input": "-443501669 CZK",
+    "expected": -443501669.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat -443501669",
+    "expected": {
+      "year": null,
+      "revenue": -443501669.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "98044678",
+    "expected": 98044678.0
+  },
+  {
+    "kind": "number",
+    "input": "98044678 Kč",
+    "expected": 98044678.0
+  },
+  {
+    "kind": "number",
+    "input": "98044678 CZK",
+    "expected": 98044678.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r98044678",
+    "expected": {
+      "year": null,
+      "revenue": 98044678.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "770180510",
+    "expected": 770180510.0
+  },
+  {
+    "kind": "number",
+    "input": "770180510 Kč",
+    "expected": 770180510.0
+  },
+  {
+    "kind": "number",
+    "input": "770180510 CZK",
+    "expected": 770180510.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r770180510",
+    "expected": {
+      "year": null,
+      "revenue": 770180510.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "195172399",
+    "expected": 195172399.0
+  },
+  {
+    "kind": "number",
+    "input": "195172399 Kč",
+    "expected": 195172399.0
+  },
+  {
+    "kind": "number",
+    "input": "195172399 CZK",
+    "expected": 195172399.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 195172399",
+    "expected": {
+      "year": null,
+      "revenue": 195172399.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "91393300",
+    "expected": 91393300.0
+  },
+  {
+    "kind": "number",
+    "input": "91393300 Kč",
+    "expected": 91393300.0
+  },
+  {
+    "kind": "number",
+    "input": "91393300 CZK",
+    "expected": 91393300.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby 91393300",
+    "expected": {
+      "year": null,
+      "revenue": 91393300.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-517829343",
+    "expected": -517829343.0
+  },
+  {
+    "kind": "number",
+    "input": "-517829343 Kč",
+    "expected": -517829343.0
+  },
+  {
+    "kind": "number",
+    "input": "-517829343 CZK",
+    "expected": -517829343.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-517829343",
+    "expected": {
+      "year": null,
+      "revenue": -517829343.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "493171092",
+    "expected": 493171092.0
+  },
+  {
+    "kind": "number",
+    "input": "493171092 Kč",
+    "expected": 493171092.0
+  },
+  {
+    "kind": "number",
+    "input": "493171092 CZK",
+    "expected": 493171092.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r493171092",
+    "expected": {
+      "year": null,
+      "revenue": 493171092.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-843220709",
+    "expected": -843220709.0
+  },
+  {
+    "kind": "number",
+    "input": "-843220709 Kč",
+    "expected": -843220709.0
+  },
+  {
+    "kind": "number",
+    "input": "-843220709 CZK",
+    "expected": -843220709.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n-843220709",
+    "expected": {
+      "year": null,
+      "revenue": -843220709.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "31011007",
+    "expected": 31011007.0
+  },
+  {
+    "kind": "number",
+    "input": "31011007 Kč",
+    "expected": 31011007.0
+  },
+  {
+    "kind": "number",
+    "input": "31011007 CZK",
+    "expected": 31011007.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n31011007",
+    "expected": {
+      "year": null,
+      "revenue": 31011007.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-640080804",
+    "expected": -640080804.0
+  },
+  {
+    "kind": "number",
+    "input": "-640080804 Kč",
+    "expected": -640080804.0
+  },
+  {
+    "kind": "number",
+    "input": "-640080804 CZK",
+    "expected": -640080804.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-640080804",
+    "expected": {
+      "year": null,
+      "revenue": -640080804.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-613289070",
+    "expected": -613289070.0
+  },
+  {
+    "kind": "number",
+    "input": "-613289070 Kč",
+    "expected": -613289070.0
+  },
+  {
+    "kind": "number",
+    "input": "-613289070 CZK",
+    "expected": -613289070.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-613289070",
+    "expected": {
+      "year": null,
+      "revenue": -613289070.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "981505206",
+    "expected": 981505206.0
+  },
+  {
+    "kind": "number",
+    "input": "981505206 Kč",
+    "expected": 981505206.0
+  },
+  {
+    "kind": "number",
+    "input": "981505206 CZK",
+    "expected": 981505206.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r981505206",
+    "expected": {
+      "year": null,
+      "revenue": 981505206.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-625596179",
+    "expected": -625596179.0
+  },
+  {
+    "kind": "number",
+    "input": "-625596179 Kč",
+    "expected": -625596179.0
+  },
+  {
+    "kind": "number",
+    "input": "-625596179 CZK",
+    "expected": -625596179.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-625596179",
+    "expected": {
+      "year": null,
+      "revenue": -625596179.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "606421389",
+    "expected": 606421389.0
+  },
+  {
+    "kind": "number",
+    "input": "606421389 Kč",
+    "expected": 606421389.0
+  },
+  {
+    "kind": "number",
+    "input": "606421389 CZK",
+    "expected": 606421389.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f606421389",
+    "expected": {
+      "year": null,
+      "revenue": 606421389.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-965156038",
+    "expected": -965156038.0
+  },
+  {
+    "kind": "number",
+    "input": "-965156038 Kč",
+    "expected": -965156038.0
+  },
+  {
+    "kind": "number",
+    "input": "-965156038 CZK",
+    "expected": -965156038.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby -965156038",
+    "expected": {
+      "year": null,
+      "revenue": -965156038.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "293379913",
+    "expected": 293379913.0
+  },
+  {
+    "kind": "number",
+    "input": "293379913 Kč",
+    "expected": 293379913.0
+  },
+  {
+    "kind": "number",
+    "input": "293379913 CZK",
+    "expected": 293379913.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n293379913",
+    "expected": {
+      "year": null,
+      "revenue": 293379913.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "848566706",
+    "expected": 848566706.0
+  },
+  {
+    "kind": "number",
+    "input": "848566706 Kč",
+    "expected": 848566706.0
+  },
+  {
+    "kind": "number",
+    "input": "848566706 CZK",
+    "expected": 848566706.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\n848566706",
+    "expected": {
+      "year": null,
+      "revenue": 848566706.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-947126187",
+    "expected": -947126187.0
+  },
+  {
+    "kind": "number",
+    "input": "-947126187 Kč",
+    "expected": -947126187.0
+  },
+  {
+    "kind": "number",
+    "input": "-947126187 CZK",
+    "expected": -947126187.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-947126187",
+    "expected": {
+      "year": null,
+      "revenue": -947126187.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "640729042",
+    "expected": 640729042.0
+  },
+  {
+    "kind": "number",
+    "input": "640729042 Kč",
+    "expected": 640729042.0
+  },
+  {
+    "kind": "number",
+    "input": "640729042 CZK",
+    "expected": 640729042.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r640729042",
+    "expected": {
+      "year": null,
+      "revenue": 640729042.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "953222680",
+    "expected": 953222680.0
+  },
+  {
+    "kind": "number",
+    "input": "953222680 Kč",
+    "expected": 953222680.0
+  },
+  {
+    "kind": "number",
+    "input": "953222680 CZK",
+    "expected": 953222680.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r953222680",
+    "expected": {
+      "year": null,
+      "revenue": 953222680.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "413269210",
+    "expected": 413269210.0
+  },
+  {
+    "kind": "number",
+    "input": "413269210 Kč",
+    "expected": 413269210.0
+  },
+  {
+    "kind": "number",
+    "input": "413269210 CZK",
+    "expected": 413269210.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f413269210",
+    "expected": {
+      "year": null,
+      "revenue": 413269210.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-753956765",
+    "expected": -753956765.0
+  },
+  {
+    "kind": "number",
+    "input": "-753956765 Kč",
+    "expected": -753956765.0
+  },
+  {
+    "kind": "number",
+    "input": "-753956765 CZK",
+    "expected": -753956765.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f-753956765",
+    "expected": {
+      "year": null,
+      "revenue": -753956765.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-18284511",
+    "expected": -18284511.0
+  },
+  {
+    "kind": "number",
+    "input": "-18284511 Kč",
+    "expected": -18284511.0
+  },
+  {
+    "kind": "number",
+    "input": "-18284511 CZK",
+    "expected": -18284511.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r-18284511",
+    "expected": {
+      "year": null,
+      "revenue": -18284511.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-373333235",
+    "expected": -373333235.0
+  },
+  {
+    "kind": "number",
+    "input": "-373333235 Kč",
+    "expected": -373333235.0
+  },
+  {
+    "kind": "number",
+    "input": "-373333235 CZK",
+    "expected": -373333235.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\n-373333235",
+    "expected": {
+      "year": null,
+      "revenue": -373333235.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-605674522",
+    "expected": -605674522.0
+  },
+  {
+    "kind": "number",
+    "input": "-605674522 Kč",
+    "expected": -605674522.0
+  },
+  {
+    "kind": "number",
+    "input": "-605674522 CZK",
+    "expected": -605674522.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f-605674522",
+    "expected": {
+      "year": null,
+      "revenue": -605674522.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "804376265",
+    "expected": 804376265.0
+  },
+  {
+    "kind": "number",
+    "input": "804376265 Kč",
+    "expected": 804376265.0
+  },
+  {
+    "kind": "number",
+    "input": "804376265 CZK",
+    "expected": 804376265.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat 804376265",
+    "expected": {
+      "year": null,
+      "revenue": 804376265.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "919148826",
+    "expected": 919148826.0
+  },
+  {
+    "kind": "number",
+    "input": "919148826 Kč",
+    "expected": 919148826.0
+  },
+  {
+    "kind": "number",
+    "input": "919148826 CZK",
+    "expected": 919148826.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r919148826",
+    "expected": {
+      "year": null,
+      "revenue": 919148826.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "169007426",
+    "expected": 169007426.0
+  },
+  {
+    "kind": "number",
+    "input": "169007426 Kč",
+    "expected": 169007426.0
+  },
+  {
+    "kind": "number",
+    "input": "169007426 CZK",
+    "expected": 169007426.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\r169007426",
+    "expected": {
+      "year": null,
+      "revenue": 169007426.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-511004859",
+    "expected": -511004859.0
+  },
+  {
+    "kind": "number",
+    "input": "-511004859 Kč",
+    "expected": -511004859.0
+  },
+  {
+    "kind": "number",
+    "input": "-511004859 CZK",
+    "expected": -511004859.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony -511004859",
+    "expected": {
+      "year": null,
+      "revenue": -511004859.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-408235105",
+    "expected": -408235105.0
+  },
+  {
+    "kind": "number",
+    "input": "-408235105 Kč",
+    "expected": -408235105.0
+  },
+  {
+    "kind": "number",
+    "input": "-408235105 CZK",
+    "expected": -408235105.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\f-408235105",
+    "expected": {
+      "year": null,
+      "revenue": -408235105.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "274330986",
+    "expected": 274330986.0
+  },
+  {
+    "kind": "number",
+    "input": "274330986 Kč",
+    "expected": 274330986.0
+  },
+  {
+    "kind": "number",
+    "input": "274330986 CZK",
+    "expected": 274330986.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat\f274330986",
+    "expected": {
+      "year": null,
+      "revenue": 274330986.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "144843949",
+    "expected": 144843949.0
+  },
+  {
+    "kind": "number",
+    "input": "144843949 Kč",
+    "expected": 144843949.0
+  },
+  {
+    "kind": "number",
+    "input": "144843949 CZK",
+    "expected": 144843949.0
+  },
+  {
+    "kind": "text",
+    "input": "Obrat 144843949",
+    "expected": {
+      "year": null,
+      "revenue": 144843949.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-935077414",
+    "expected": -935077414.0
+  },
+  {
+    "kind": "number",
+    "input": "-935077414 Kč",
+    "expected": -935077414.0
+  },
+  {
+    "kind": "number",
+    "input": "-935077414 CZK",
+    "expected": -935077414.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\n-935077414",
+    "expected": {
+      "year": null,
+      "revenue": -935077414.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-945146324",
+    "expected": -945146324.0
+  },
+  {
+    "kind": "number",
+    "input": "-945146324 Kč",
+    "expected": -945146324.0
+  },
+  {
+    "kind": "number",
+    "input": "-945146324 CZK",
+    "expected": -945146324.0
+  },
+  {
+    "kind": "text",
+    "input": "Tržby\r-945146324",
+    "expected": {
+      "year": null,
+      "revenue": -945146324.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "-361474439",
+    "expected": -361474439.0
+  },
+  {
+    "kind": "number",
+    "input": "-361474439 Kč",
+    "expected": -361474439.0
+  },
+  {
+    "kind": "number",
+    "input": "-361474439 CZK",
+    "expected": -361474439.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\r-361474439",
+    "expected": {
+      "year": null,
+      "revenue": -361474439.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "number",
+    "input": "78118802",
+    "expected": 78118802.0
+  },
+  {
+    "kind": "number",
+    "input": "78118802 Kč",
+    "expected": 78118802.0
+  },
+  {
+    "kind": "number",
+    "input": "78118802 CZK",
+    "expected": 78118802.0
+  },
+  {
+    "kind": "text",
+    "input": "Výkony\f78118802",
+    "expected": {
+      "year": null,
+      "revenue": 78118802.0,
+      "totalAssets": null,
+      "netProfit": null,
+      "confidence": "high",
+      "sourceNotes": []
+    }
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-91269275286255885040277852038784180077553398013644062057123137843875669288329363\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=63926643709356859472449431318288304529914716410031889362287250552569434120700243\">detail</a></td></tr></table>",
+    "expected": "63926643709356859472449431318288304529914716410031889362287250552569434120700243"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-91261958205863747202882916925605749279567387594791937295824091365405841545519319\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-13506543425155154752768178635673893437953103336231934818466955993260713688266506\">detail</a></td></tr></table>",
+    "expected": "-13506543425155154752768178635673893437953103336231934818466955993260713688266506"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-37154871641077705087741501017569536588502873949169248370371522905307715989726045\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=31876103838178061990566826338654574278524067026417150490235439090527714387982079\">detail</a></td></tr></table>",
+    "expected": "31876103838178061990566826338654574278524067026417150490235439090527714387982079"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=52707625419412038460369367075029250171011083588429220421024322576789187427290574\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-53553947724278401090999159719338555428204684283183247922840281252233104786953456\">detail</a></td></tr></table>",
+    "expected": "52707625419412038460369367075029250171011083588429220421024322576789187427290574"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-50852148501545582922235511700773689265905414282336125019074461844978342995765458\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=10788756351704484194139869104391274321261843559589703647836228965174754970608989\">detail</a></td></tr></table>",
+    "expected": "10788756351704484194139869104391274321261843559589703647836228965174754970608989"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=77137801816605648598795066955272263617896873509956377001064277194757317542302919\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=21149797369962818934571030654930704712016309678945803186902980728703669705035105\">detail</a></td></tr></table>",
+    "expected": "77137801816605648598795066955272263617896873509956377001064277194757317542302919"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=25489891067667861634850312479864065330572892100022535532231650524549769061554449\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-40241954434816343536598411763619839969602929820866729532304490244157073420837294\">detail</a></td></tr></table>",
+    "expected": "25489891067667861634850312479864065330572892100022535532231650524549769061554449"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=62586625005729798530206897688856261492337002995028933622217732129023150750531198\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-76871860512231511430477488264125031837314031710346736980885157476211205015524098\">detail</a></td></tr></table>",
+    "expected": "62586625005729798530206897688856261492337002995028933622217732129023150750531198"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=15953614014703061481115175517514223325483510737557245716452796178279001715246280\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-43104806224785849026527158117992442361245138208474828054736660755761706576590579\">detail</a></td></tr></table>",
+    "expected": "15953614014703061481115175517514223325483510737557245716452796178279001715246280"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-58123548640052203713694864371615522096891070944458715409097058061507895212355003\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=96325559506173755191970296856710519364410956622912236013999427882627145578591303\">detail</a></td></tr></table>",
+    "expected": "96325559506173755191970296856710519364410956622912236013999427882627145578591303"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-74216670304957569402189425807277918051143978748556128154140806035561985793729199\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-50844561147318458093723461566566841352644856217933359073728525086813522289450649\">detail</a></td></tr></table>",
+    "expected": "-50844561147318458093723461566566841352644856217933359073728525086813522289450649"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=12858070320330622469431705520953241559464684742838788699878067193137691442429030\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=14548303653987730645306332603487192759843198424348270101982656793778555960935313\">detail</a></td></tr></table>",
+    "expected": "14548303653987730645306332603487192759843198424348270101982656793778555960935313"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=74577471748921697729484009757410392762705185611579686224401095419483162822137948\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=11835807639510896465446020823661691266147798225756393440858707044847058374290694\">detail</a></td></tr></table>",
+    "expected": "74577471748921697729484009757410392762705185611579686224401095419483162822137948"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=33533092706217812514011230968864406518522136054237775903815434916442751264387418\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=77503585869859108430164253209561101758633361570293389857165137634645570060156806\">detail</a></td></tr></table>",
+    "expected": "77503585869859108430164253209561101758633361570293389857165137634645570060156806"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-67220820695355795297960198757245265492150456717538005798395227983023841189635592\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=30646662720229961796658883195314001888155252947809393245243672252523498136746204\">detail</a></td></tr></table>",
+    "expected": "30646662720229961796658883195314001888155252947809393245243672252523498136746204"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-17167450961450064723759316750855847160803396506476622936026858620368433953466378\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=33976653397677281883116797857056856668268418940353675032884266514244761751161098\">detail</a></td></tr></table>",
+    "expected": "33976653397677281883116797857056856668268418940353675032884266514244761751161098"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=56122221413367225749829249911436752155346011696331155968570095586178881237924671\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=93035907047719174218860229461559708794653250124705010000583583411416560922948687\">detail</a></td></tr></table>",
+    "expected": "93035907047719174218860229461559708794653250124705010000583583411416560922948687"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=97135584223401655132413089436934945192537293157335857791603208762655581968649683\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=11625438214937335569977047973655999542582366615027931477462767732801190719982036\">detail</a></td></tr></table>",
+    "expected": "97135584223401655132413089436934945192537293157335857791603208762655581968649683"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-25184486340933432768938275583113331321150948816868118799484634163973849990189868\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=33476870764805721343353249829172983965897516960692260502439257981412665803597922\">detail</a></td></tr></table>",
+    "expected": "33476870764805721343353249829172983965897516960692260502439257981412665803597922"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-27587221165934483468910553912083861046274628359302332976705455032917176510737539\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=39635674015993281977496372200509245444256424865865825006117267980655098342186767\">detail</a></td></tr></table>",
+    "expected": "39635674015993281977496372200509245444256424865865825006117267980655098342186767"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-39517930517721214927665201179192423170279427126360361791266961483220190685197250\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=39336190332202082983922683499951950176244988152941619982042325386651938571383201\">detail</a></td></tr></table>",
+    "expected": "39336190332202082983922683499951950176244988152941619982042325386651938571383201"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=61643518478604934112554536101909984312932689533279828208064712988921128199027902\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=12639342114597393031188268368431440674549167094790800915433688557215280476042258\">detail</a></td></tr></table>",
+    "expected": "61643518478604934112554536101909984312932689533279828208064712988921128199027902"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-63630178257803111085424372759772670878509037149319346977944013016310476093534465\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=57665465700184544181896416497775470896954449022297177324922596488191335552043193\">detail</a></td></tr></table>",
+    "expected": "57665465700184544181896416497775470896954449022297177324922596488191335552043193"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=21910454325704081070034848443006002746873605476438229775343977537636923067904862\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=21149966627292639235703812575308696370078176774410438294312367410376522291378318\">detail</a></td></tr></table>",
+    "expected": "21910454325704081070034848443006002746873605476438229775343977537636923067904862"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=871291077494124524180431468556884998887512602483024336656469113838682835253403\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-38331969075354277394713527496489097318342125766717948078393799708506638044020879\">detail</a></td></tr></table>",
+    "expected": "871291077494124524180431468556884998887512602483024336656469113838682835253403"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-51864188925327022561783837200441941602210195016142362692665632558344010704021997\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=87431351121708452437037222095450945596257401922288841642498052395845670764957738\">detail</a></td></tr></table>",
+    "expected": "87431351121708452437037222095450945596257401922288841642498052395845670764957738"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=28242604788388718697771291778928419484398375783033399583698393266923282708762354\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-14381118707985627186292616620236748409152399161169178205744967691709388109869442\">detail</a></td></tr></table>",
+    "expected": "28242604788388718697771291778928419484398375783033399583698393266923282708762354"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=55953473830047115296562718068544617616532011365700704346360313777960864774836278\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-13347390377618397670882754123687919686811238901151032492899837846050176028832531\">detail</a></td></tr></table>",
+    "expected": "55953473830047115296562718068544617616532011365700704346360313777960864774836278"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-54409269441308489033434525801807795850959221301027162357434991207863184233125750\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-82364093850196379895354213323710311311857640025564419589291539126383042148998861\">detail</a></td></tr></table>",
+    "expected": "-54409269441308489033434525801807795850959221301027162357434991207863184233125750"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-95068558653429079416285480545384881345457852008135685566295947969325113828926090\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=23948386167250242562782954270174432588164562097266792090191993938310526315595904\">detail</a></td></tr></table>",
+    "expected": "23948386167250242562782954270174432588164562097266792090191993938310526315595904"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=5037908039933027068868787586617911632470747964786779926293242562826747549195915\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-25832422125784184646807637960301172602390098884373228530458725882600218350319509\">detail</a></td></tr></table>",
+    "expected": "5037908039933027068868787586617911632470747964786779926293242562826747549195915"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-17477624864151577125450381144399910112839264863524031322485673719070772607064191\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-63572156601783987531220205345444306803705758605319726729275285970931278671288593\">detail</a></td></tr></table>",
+    "expected": "-17477624864151577125450381144399910112839264863524031322485673719070772607064191"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=16707777153174233002626844498763067767358728409569141966759749336093574057811881\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-28152212549696175930692575636708250361988062206627566679461770731615012529187937\">detail</a></td></tr></table>",
+    "expected": "16707777153174233002626844498763067767358728409569141966759749336093574057811881"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-53269057308765645042896448043157996664887134402406609061489367265762803884417919\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-88251187973372198760371863565842575297795234935550791770824235448620243094777164\">detail</a></td></tr></table>",
+    "expected": "-53269057308765645042896448043157996664887134402406609061489367265762803884417919"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-32751902044094275659841013112768534917521958565475348563068105318176126362251146\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-14843790380372970487316891603355729876155124166636075583027636036648228143589427\">detail</a></td></tr></table>",
+    "expected": "-14843790380372970487316891603355729876155124166636075583027636036648228143589427"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-70063131368243985289182897574128109803077516676524494878981671117193595476458790\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-47505775950358865396029190527884430959077415933199821381448876291817816846786719\">detail</a></td></tr></table>",
+    "expected": "-47505775950358865396029190527884430959077415933199821381448876291817816846786719"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=84744194064327820164682282860953768353897054226217056279991266071442245386815035\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-74317729519643474597835648170555657159412373878011279851758430743784230864002445\">detail</a></td></tr></table>",
+    "expected": "84744194064327820164682282860953768353897054226217056279991266071442245386815035"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=60952643073919672378717432563627279881235559986386905864781031863742125480500874\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-47047529968709358894725337978297724009283048252010686546353268205968063050899922\">detail</a></td></tr></table>",
+    "expected": "60952643073919672378717432563627279881235559986386905864781031863742125480500874"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=-64831721754359514005436823286065905267943412965477932241467943341535894702291095\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=-36422783122621118630211116936698521382187351733462117502136994042318706306422190\">detail</a></td></tr></table>",
+    "expected": "-36422783122621118630211116936698521382187351733462117502136994042318706306422190"
+  },
+  {
+    "kind": "candidate",
+    "input": "<table><tr><td>účetní závěrka [2023]<a href=\"?dokument=39414018700814976285362763010239508189140537859263793351596962485282648949400427\">detail</a></td></tr><tr><td>účetní závěrka [2023]<a href=\"?dokument=528728121211215566955862383677790453962556727779468885418563939270600635844310\">detail</a></td></tr></table>",
+    "expected": "39414018700814976285362763010239508189140537859263793351596962485282648949400427"
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby><?pi data?>100</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 100.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby>12<?pi data?>34</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 1234.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  },
+  {
+    "kind": "xml",
+    "input": "<a><Trzby>12<b/>34</Trzby></a>",
+    "expected": {
+      "year": null,
+      "revenue": 12.0,
+      "totalAssets": null,
+      "netProfit": null
+    }
+  }
+]

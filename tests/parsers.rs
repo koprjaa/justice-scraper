@@ -224,3 +224,49 @@ fn pdf_text_preserves_page_content_without_renderer_padding() {
     let text = extract_pdf_text(include_bytes!("fixtures/statement.pdf"), None).unwrap();
     assert_eq!(text, "Revenue 15000000");
 }
+#[test]
+fn deeply_nested_xml_does_not_recurse_on_the_stack() {
+    let xml = format!(
+        "{}<Trzby>100</Trzby>{}",
+        "<a>".repeat(2000),
+        "</a>".repeat(2000)
+    );
+    assert!(parse_financial_xml(&xml, None).is_none());
+    let xml = format!(
+        "{}<Trzby>100</Trzby>{}",
+        "<a>".repeat(100),
+        "</a>".repeat(100)
+    );
+    assert_eq!(parse_financial_xml(&xml, None).unwrap()["revenue"], 100.);
+}
+#[test]
+fn invalid_limiter_intervals_do_not_panic() {
+    for interval in [-1., f64::NAN, f64::INFINITY, f64::MAX] {
+        let _ = justice_scraper::http::RateLimiter::new(interval);
+    }
+}
+#[cfg(unix)]
+#[test]
+fn external_command_timeout_kills_and_reaps_child() {
+    let started = std::time::Instant::now();
+    let error = command_output(
+        std::process::Command::new("sleep").arg("10"),
+        std::time::Duration::from_millis(40),
+    )
+    .unwrap_err();
+    assert_eq!(error.kind(), std::io::ErrorKind::TimedOut);
+    assert!(started.elapsed() < std::time::Duration::from_secs(2));
+}
+#[test]
+fn nonfinite_financial_json_is_null() {
+    let xml = format!("<a><Trzby>{}</Trzby></a>", "9".repeat(400));
+    assert!(parse_number(&"9".repeat(400)).unwrap().is_infinite());
+    assert!(parse_financial_xml(&xml, None).unwrap()["revenue"].is_null());
+}
+#[test]
+fn xml_depth_scanner_handles_quoted_angles_and_cdata() {
+    let xml = "<?xml version='1.0'?><a attr='>'><!-- <a> --><Trzby><![CDATA[100]]></Trzby></a>";
+    assert_eq!(parse_financial_xml(xml, None).unwrap()["revenue"], 100.);
+    assert!(parse_financial_xml("<a attr='unterminated>", None).is_none());
+    assert!(parse_financial_xml("<!-- unterminated", None).is_none());
+}
