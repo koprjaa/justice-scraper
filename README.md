@@ -5,38 +5,41 @@ Pulls financial statement links and figures from the Czech Justice Registry.
 [![CI](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)](LICENSE)
 
-The registry has no public API. This Rust application follows its HTML pages and attached documents to collect statement links and accounting figures. It is a prototype: keyword matching can select incorrect amounts, so use the results as leads requiring verification. Records with internally contradictory figures carry low confidence and explanatory source notes.
-
 ## What it does
 
-- Walks subject IDs 1 through 1000 and writes `document_links.csv`.
-- Reads company identifiers from the first column of `PO_ALL.csv`, after its header, and appends results to `financials_links.csv`.
-- Resumes batch processing by skipping identifiers already present in the output.
-- Downloads listed documents and writes extracted PDF text into `texts/`.
-- Exposes an asynchronous Rust library for retrieving one company's financial records, preferring XML, then XHTML, then PDF links.
+- `justice_scraper` scans subject IDs 1 through 1000 and overwrites `document_links.csv` with statement links.
+- `batch_scraper` reads company identifiers (IČO) from `PO_ALL.csv` and appends document links and metadata to `financials_links.csv`. It skips identifiers already in the output.
+- `download_pdfs` reads the batch output and saves extracted PDF text as `texts/<ico>_<year>_<document-id>.txt`. It skips existing text files.
+
+The Rust library's `fetch_justice_financials` returns JSON with financial records for one company. It prefers XML, then XHTML, and collects PDF links without parsing their figures. Batch CSV output contains links and metadata; financial amounts remain in the library result. Keyword matching can select incorrect amounts, so check extracted figures against their source documents.
 
 ## Install
 
-Install a current stable Rust toolchain, then run:
+Install a stable Rust toolchain, then run from the repository directory:
 
 ```sh
 cargo install --path .
 ```
 
-Optional library OCR requires Poppler's `pdftoppm` and Tesseract with Czech and English language data available on `PATH`.
+No configuration or environment variables are required. For OCR through the library's PDF parser, install Poppler's `pdftoppm` and Tesseract with Czech and English language data on `PATH`. The downloader only extracts PDF text layers.
 
 ## Use
 
-Run commands from the directory containing your input CSV files:
+Run from the directory containing your CSV files. `PO_ALL.csv` must have a header and company identifiers in its first column. Run batch processing before downloading:
 
 ```sh
-justice_scraper
 batch_scraper
 download_pdfs
 ```
 
-The batch input must contain a header and company identifiers in its first column. Run batch processing before downloading. Existing text files are skipped. See each executable's `--help` for its purpose and default files. For library integration, call `justice_scraper::fetch_justice_financials` from a Tokio runtime; it returns the record structure as a JSON value.
+To scan the fixed subject ID range separately:
+
+```sh
+justice_scraper
+```
+
+Each command accepts `--help` for its purpose and file defaults.
 
 ## License
 
-[MIT](LICENSE). Copyright © 2025 Jan Alexandr Kopřiva.
+[MIT](LICENSE)
