@@ -62,12 +62,16 @@
   {
     "kind": "number",
     "input": "1.234.567",
-    "expected": 1234.567
+    "expected": 1234.567,
+    "rustExpected": 1234567.0,
+    "difference": "Repeated separators group thousands; Python read the dots as a decimal point."
   },
   {
     "kind": "number",
     "input": "1,234,567",
-    "expected": null
+    "expected": null,
+    "rustExpected": 1234567.0,
+    "difference": "Repeated separators group thousands; Python rejected the value."
   },
   {
     "kind": "number",

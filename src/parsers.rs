@@ -84,6 +84,9 @@ pub fn parse_number(s: &str) -> Option<f64> {
     match (s.rfind(','), s.rfind('.')) {
         (Some(c), Some(d)) if c > d => s = s.replace('.', "").replace(',', "."),
         (Some(_), Some(_)) => s = s.replace(',', ""),
+        // Repeated separators can only group thousands.
+        (Some(_), None) if s.matches(',').count() > 1 => s = s.replace(',', ""),
+        (None, Some(_)) if s.matches('.').count() > 1 => s = s.replace('.', ""),
         (Some(_), None) => {
             let (l, r) = s.split_once(',')?;
             s = if r.len() <= 2 {
