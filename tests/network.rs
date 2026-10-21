@@ -76,7 +76,7 @@ async fn financial_workflow() {
         .mount(&server)
         .await;
     let c = JusticeHttpClient::new(&server.uri()).unwrap();
-    let r = fetch_with_client(&c, "CZ27074358123").await;
+    let r = fetch_with_client(&c, "CZ27074358").await;
     assert_eq!(r["ico"], "27074358");
     assert_eq!(r["subjektId"], "7");
     assert_eq!(r["financials"][0]["revenue"], 15000000.);
@@ -397,5 +397,97 @@ async fn malformed_utf8_is_replaced_and_http_bom_is_removed() {
             .await
             .as_deref(),
         Some("x")
+    );
+}
+#[test]
+fn ico_is_padded_and_overlong_is_rejected() {
+    use justice_scraper::service::normalize_ico;
+    assert_eq!(normalize_ico("6947").as_deref(), Some("00006947"));
+    assert_eq!(normalize_ico("27 07 43 58").as_deref(), Some("27074358"));
+    assert_eq!(normalize_ico("123456789"), None);
+    assert_eq!(normalize_ico("invalid"), None);
+}
+#[tokio::test]
+async fn short_ico_is_queried_with_leading_zeros() {
+    let s = MockServer::start().await;
+    Mock::given(path("/ias/ui/rejstrik-$firma"))
+        .and(query_param("ico", "00006947"))
+        .respond_with(ResponseTemplate::new(200).set_body_string("no company here"))
+        .expect(1)
+        .mount(&s)
+        .await;
+    Mock::given(path("/ias/ui/rejstrik-firma"))
+        .and(query_param("ico", "00006947"))
+        .respond_with(ResponseTemplate::new(200).set_body_string("no company here"))
+        .expect(1)
+        .mount(&s)
+        .await;
+    let c = JusticeHttpClient::new(&s.uri()).unwrap();
+    let r = fetch_with_client(&c, "6947").await;
+    assert_eq!(r["ico"], "00006947");
+    assert!(r.get("failed").is_none());
+}
+#[tokio::test]
+async fn failed_requests_are_not_recorded_as_no_records() {
+    let s = MockServer::start().await;
+    Mock::given(path("/ias/ui/rejstrik-$firma"))
+        .respond_with(ResponseTemplate::new(404))
+        .mount(&s)
+        .await;
+    Mock::given(path("/ias/ui/rejstrik-firma"))
+        .respond_with(ResponseTemplate::new(404))
+        .mount(&s)
+        .await;
+    let c = JusticeHttpClient::new(&s.uri()).unwrap();
+    assert_eq!(
+        fetch_with_client(&c, "27074358").await["failed"],
+        "step1_failed"
+    );
+    let dir = tempfile::tempdir().unwrap();
+    let input = dir.path().join("in.csv");
+    let output = dir.path().join("out.csv");
+    std::fs::write(&input, "ico\n27074358\n").unwrap();
+    let err = justice_scraper::jobs::batch_from(&input, &output, &s.uri())
+        .await
+        .unwrap_err();
+    assert!(err.to_string().contains("1 companies failed"));
+    // Only the header: the company stays unprocessed and is retried next time.
+    assert_eq!(std::fs::read_to_string(&output).unwrap().lines().count(), 1);
+}
+#[tokio::test]
+async fn batch_resume_matches_ico_however_it_was_typed() {
+    let dir = tempfile::tempdir().unwrap();
+    let input = dir.path().join("in.csv");
+    let output = dir.path().join("out.csv");
+    std::fs::write(&input, "ico\n27 07 43 58\n6947\n").unwrap();
+    std::fs::write(
+        &output,
+        "ico,subjektId,dokumentId,year,documentUrl,sourceType,parserUsed,sourceNotes\r\n27074358,,,,,,,no_records\r\n00006947,,,,,,,no_records\r\n",
+    )
+    .unwrap();
+    let before = std::fs::read(&output).unwrap();
+    // Nothing is left to fetch, so no request is made (the origin is unreachable).
+    justice_scraper::jobs::batch_from(&input, &output, "http://127.0.0.1:9")
+        .await
+        .unwrap();
+    assert_eq!(std::fs::read(&output).unwrap(), before);
+}
+#[tokio::test]
+async fn failed_range_keeps_the_previous_output() {
+    let s = MockServer::start().await;
+    Mock::given(path("/ias/ui/vypis-sl-firma"))
+        .respond_with(ResponseTemplate::new(503))
+        .mount(&s)
+        .await;
+    let dir = tempfile::tempdir().unwrap();
+    let out = dir.path().join("document_links.csv");
+    std::fs::write(&out, "ico,vznik_listiny,link,typ\r\n1,2,3,XML\r\n").unwrap();
+    let err = justice_scraper::jobs::scrape_range(1, 1, &out, &s.uri())
+        .await
+        .unwrap_err();
+    assert!(err.to_string().contains("kept the existing"));
+    assert_eq!(
+        std::fs::read_to_string(&out).unwrap(),
+        "ico,vznik_listiny,link,typ\r\n1,2,3,XML\r\n"
     );
 }

@@ -4,7 +4,11 @@
 // Author: Jan Alexandr Kopřiva
 // License: MIT
 use crate::{
-    html::*, http::*, parsers::extract_pdf_text, service::fetch_justice_financials, Error,
+    html::*,
+    http::*,
+    parsers::extract_pdf_text,
+    service::{fetch_justice_financials_from, normalize_ico},
+    Error,
 };
 use std::{
     collections::HashSet,
@@ -96,7 +100,11 @@ pub async fn scrape_range(
             Some([ico, date.unwrap_or_default(), url, kind])
         });
     }
-    let mut csv = writer(fs::File::create(output)?);
+    // Rows go to a sibling file first, so a failed run cannot destroy the last good output.
+    let mut partial = output.as_os_str().to_owned();
+    partial.push(".part");
+    let partial = std::path::PathBuf::from(partial);
+    let mut csv = writer(fs::File::create(&partial)?);
     csv.write_record(["ico", "vznik_listiny", "link", "typ"])?;
     let mut count = 0;
     while let Some(row) = tasks.join_next().await {
@@ -110,6 +118,12 @@ pub async fn scrape_range(
         }
     }
     csv.flush()?;
+    drop(csv);
+    if count == 0 && output.exists() {
+        fs::remove_file(&partial)?;
+        return Err(format!("no rows scraped, kept the existing {}", output.display()).into());
+    }
+    fs::rename(&partial, output)?;
     log(
         "INFO",
         &format!("Finished: saved {count} rows to {}", output.display()),
@@ -150,12 +164,19 @@ fn read_rows(path: &Path) -> Result<Vec<csv::StringRecord>, Error> {
     rows.extend(reader.records().collect::<Result<Vec<_>, _>>()?);
     Ok(rows)
 }
+/// Key under which a company counts as processed: the registry number, however it was typed.
+fn ico_key(raw: &str) -> String {
+    normalize_ico(raw).unwrap_or_else(|| raw.to_owned())
+}
 pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
+    batch_from(input, output, ORIGIN).await
+}
+pub async fn batch_from(input: &Path, output: &Path, origin: &str) -> Result<(), Error> {
     let processed: HashSet<String> = if output.exists() {
         read_rows(output)?
             .into_iter()
             .skip(1)
-            .filter_map(|r| r.get(0).map(str::to_owned))
+            .filter_map(|r| r.get(0).map(ico_key))
             .collect()
     } else {
         HashSet::new()
@@ -167,7 +188,7 @@ pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
             r.get(0)
                 .map(|s| s.trim_matches(crate::parsers::python_whitespace).to_owned())
         })
-        .filter(|i| !processed.contains(i))
+        .filter(|i| !processed.contains(&ico_key(i)))
         .collect();
     println!(
         "Total entries found. Already processed: {}. Remaining: {}",
@@ -196,13 +217,26 @@ pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
     let mut tasks = JoinSet::new();
     for ico in icos {
         let sem = sem.clone();
+        let origin = origin.to_owned();
         tasks.spawn(async move {
             let _permit = sem.acquire_owned().await?;
-            fetch_justice_financials(&ico).await
+            fetch_justice_financials_from(&origin, &ico).await
         });
     }
+    let mut failed = 0;
     while let Some(res) = tasks.join_next().await {
         match res {
+            // A failed request is not "no records": leave it unrecorded so the next run retries it.
+            Ok(Ok(v)) if v.get("failed").is_some() => {
+                failed += 1;
+                log(
+                    "ERROR",
+                    &format!(
+                        "ICO {} not recorded, will be retried: {}",
+                        v["ico"], v["failed"]
+                    ),
+                );
+            }
             Ok(Ok(v)) => {
                 let value = |v: &serde_json::Value| {
                     if v.is_null() {
@@ -250,6 +284,11 @@ pub async fn batch(input: &Path, output: &Path) -> Result<(), Error> {
             Ok(Err(e)) => log("ERROR", &format!("Error processing ICO: {e}")),
             Err(e) => log("ERROR", &format!("Error processing ICO: {e}")),
         }
+    }
+    if failed > 0 {
+        return Err(
+            format!("{failed} companies failed and were not recorded; run again to retry").into(),
+        );
     }
     Ok(())
 }
@@ -438,7 +477,10 @@ async fn download_one(
         Ok(text) => {
             #[cfg(windows)]
             let text = text.replace('\n', "\r\n");
-            fs::write(path, text)?;
+            // A half-written file would be skipped as "already downloaded" next run.
+            let partial = path.with_extension("txt.part");
+            fs::write(&partial, text)?;
+            fs::rename(partial, path)?;
         }
         Err(_) => log("ERROR", &format!("{ico}: Failed to extract text from PDF")),
     };

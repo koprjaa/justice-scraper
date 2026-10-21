@@ -13,24 +13,33 @@ use serde_json::{json, Value};
 fn result(ico: &str, id: &str, records: Vec<Value>) -> Value {
     json!({"ico":ico,"subjektId":id,"financials":records,"lastUpdated":Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Micros,false)})
 }
+/// Registry number as the registry stores it: eight digits, leading zeros kept.
+/// None when the input has no digits or more than eight (not a company number).
+pub fn normalize_ico(raw: &str) -> Option<String> {
+    let digits = regex::Regex::new(r"\D").unwrap().replace_all(raw, "");
+    (!digits.is_empty() && digits.len() <= 8).then(|| format!("{digits:0>8}"))
+}
 pub async fn fetch_justice_financials(ico: &str) -> Result<Value, crate::Error> {
-    let client = JusticeHttpClient::new(ORIGIN)?;
+    fetch_justice_financials_from(ORIGIN, ico).await
+}
+pub async fn fetch_justice_financials_from(origin: &str, ico: &str) -> Result<Value, crate::Error> {
+    let client = JusticeHttpClient::new(origin)?;
     Ok(fetch_with_client(&client, ico).await)
 }
+/// Marks a result that came from a failed request, so a batch can retry it
+/// instead of recording "no_records" for good.
+fn failed(mut result: Value, why: &str) -> Value {
+    result["failed"] = json!(why);
+    result
+}
 pub async fn fetch_with_client(client: &JusticeHttpClient, raw: &str) -> Value {
-    let ico = regex::Regex::new(r"\D")
-        .unwrap()
-        .replace_all(raw, "")
-        .chars()
-        .take(8)
-        .collect::<String>();
-    if ico.is_empty() {
+    let Some(ico) = normalize_ico(raw) else {
         log(
             "INFO",
             &format!("justice-scraper ico={raw} status=invalid_ico"),
         );
         return result(raw, "", vec![]);
-    }
+    };
     log("INFO", &format!("justice-scraper ico={ico} status=start"));
     let origin = &client.origin;
     let variants=[("step1_primary",format!("{origin}/ias/ui/rejstrik-$firma?ico={ico}&jenPlatne=PLATNE&polozek=50&typHledani=STARTS_WITH")),("step1_fallback",format!("{origin}/ias/ui/rejstrik-firma?ico={ico}"))];
@@ -57,7 +66,12 @@ pub async fn fetch_with_client(client: &JusticeHttpClient, raw: &str) -> Value {
                 }
             ),
         );
-        return result(&ico, "", vec![]);
+        let empty = result(&ico, "", vec![]);
+        return if html.is_none() {
+            failed(empty, "step1_failed")
+        } else {
+            empty
+        };
     };
     let Some(list) = client
         .text(
@@ -72,7 +86,7 @@ pub async fn fetch_with_client(client: &JusticeHttpClient, raw: &str) -> Value {
             "INFO",
             &format!("justice-scraper ico={ico} subjektId={id} status=documents_failed"),
         );
-        return result(&ico, &id, vec![]);
+        return failed(result(&ico, &id, vec![]), "documents_failed");
     };
     let candidates = parse_document_candidates(&list, origin);
     if candidates.is_empty() {
@@ -94,7 +108,17 @@ pub async fn fetch_with_client(client: &JusticeHttpClient, raw: &str) -> Value {
             records.len()
         ),
     );
-    result(&ico, &id, records)
+    let unavailable = records.iter().any(|r| {
+        r["sourceNotes"]
+            .as_array()
+            .is_some_and(|n| n.iter().any(|n| n == "document_detail_unavailable"))
+    });
+    let done = result(&ico, &id, records);
+    if unavailable {
+        failed(done, "document_detail_unavailable")
+    } else {
+        done
+    }
 }
 async fn process_candidate(client: &JusticeHttpClient, ico: &str, c: &Candidate) -> Value {
     let year = c.year.unwrap_or_else(|| Utc::now().year());
