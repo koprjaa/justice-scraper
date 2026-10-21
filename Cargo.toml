@@ -17,7 +17,7 @@ regex = "1"
 unicode-normalization = "0.1"
 chrono = "0.4"
 rand = "0.9"
-pdf-extract = "0.10"
+pdf-extract = "0.12"
 tempfile = "3"
 
 [dev-dependencies]
