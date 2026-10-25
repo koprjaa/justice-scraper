@@ -2,7 +2,7 @@
 // File: src/bin/batch_scraper.rs
 // Description: Resume financial document retrieval from PO_ALL.csv.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 #[tokio::main]
 async fn main() {
     if justice_scraper::jobs::cli_help(

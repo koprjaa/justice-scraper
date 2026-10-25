@@ -2,7 +2,7 @@
 // File: tests/cli.rs
 // Description: CLI defaults, exit status, help, and resume behavior.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use std::process::Command;
 #[test]
 fn help() {

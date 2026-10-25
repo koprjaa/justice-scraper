@@ -2,7 +2,7 @@
 // File: src/bin/justice_scraper.rs
 // Description: Scrape subject IDs 1 through 1000.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 #[tokio::main]
 async fn main() {
     if justice_scraper::jobs::cli_help(

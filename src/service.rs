@@ -2,7 +2,7 @@
 // File: src/service.rs
 // Description: Three-step financial statement retrieval.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use crate::{
     html::*,
     http::{log, JusticeHttpClient},

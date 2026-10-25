@@ -2,7 +2,7 @@
 // File: tests/parsers.rs
 // Description: Equivalents of the original normalization and financial parser tests.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use chrono::{Datelike, Utc};
 use justice_scraper::parsers::*;
 #[test]

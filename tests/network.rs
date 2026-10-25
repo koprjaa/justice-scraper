@@ -2,7 +2,7 @@
 // File: tests/network.rs
 // Description: Offline registry workflow, retry, and CSV smoke tests.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use justice_scraper::{html::*, http::JusticeHttpClient, service::fetch_with_client};
 use wiremock::{
     matchers::{header, method, path, query_param},

@@ -2,7 +2,7 @@
 // File: src/http.rs
 // Description: Session HTTP policies and Python-style logging.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use std::{
     io::Write,
     sync::Mutex,

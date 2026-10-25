@@ -3,7 +3,7 @@
 Pulls financial statement links and figures from the Czech Justice Registry.
 
 [![CI](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/koprjaa/justice-scraper/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-A31F34?style=flat-square)](LICENSE)
 
 ## What it does
 
@@ -42,4 +42,4 @@ Each command accepts `--help` for its purpose and file defaults.
 
 ## License
 
-[MIT](LICENSE)
+[AGPL-3.0-or-later](LICENSE)

@@ -2,7 +2,7 @@
 // File: src/parsers.rs
 // Description: Locale normalization and financial document extraction.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use chrono::{Datelike, Utc};
 use regex::Regex;
 use serde_json::{json, Value};

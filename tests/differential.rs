@@ -2,7 +2,7 @@
 // File: tests/differential.rs
 // Description: Differential cases captured from the original Python implementation.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 use justice_scraper::{html::*, parsers::*};
 use serde_json::{json, Value};
 #[test]

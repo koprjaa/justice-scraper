@@ -2,7 +2,7 @@
 // File: src/bin/download_pdfs.rs
 // Description: Download financial documents and extract PDF text.
 // Author: Jan Alexandr Kopřiva
-// License: MIT
+// License: AGPL-3.0-or-later
 #[tokio::main]
 async fn main() {
     if justice_scraper::jobs::cli_help(

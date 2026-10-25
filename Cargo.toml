@@ -3,7 +3,7 @@ name = "justice-scraper"
 version = "1.0.0"
 edition = "2021"
 authors = ["Jan Alexandr Kopřiva"]
-license = "MIT"
+license = "AGPL-3.0-or-later"
 description = "Pulls financial statement links and figures from the Czech Justice Registry."
 
 [dependencies]
